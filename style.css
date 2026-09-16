@@ -517,7 +517,7 @@ footer p {
 
     .site-info {
         margin-top: 24px;
-
+        justify-content: flex-start;
         gap: 10px;
 
         font-size: 12px;
