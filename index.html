@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="pl">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,14 +14,7 @@
 
     <main class="page">
 
-        <!-- =========================
-             PROFILE BOX
-        ========================== -->
-
-        <section
-            class="box profile-box"
-            id="profile-box"
-        >
+        <section class="box profile-box" id="profile-box">
 
             <div class="profile">
 
@@ -35,7 +27,8 @@
                 <div class="profile-text">
 
                     <h1 id="typing-name">
-                        <span id="typing-text"></span><span class="cursor">|</span>
+                        <span id="typing-text"></span>
+                        <span class="cursor">|</span>
                     </h1>
 
                     <p>@kitsun3.kage</p>
@@ -45,10 +38,6 @@
             </div>
 
 
-            <!-- =========================
-                 SOCIALS
-            ========================== -->
-
             <div class="socials">
 
                 <button
@@ -57,12 +46,10 @@
                     onclick="window.open('https://instagram.com', '_blank')"
                     aria-label="Instagram"
                 >
-
                     <img
                         src="instagram-icon.svg"
                         alt="Instagram"
                     >
-
                 </button>
 
 
@@ -72,20 +59,14 @@
                     onclick="window.open('https://github.com', '_blank')"
                     aria-label="GitHub"
                 >
-
                     <img
                         src="github-icon.svg"
                         alt="GitHub"
                     >
-
                 </button>
 
             </div>
 
-
-            <!-- =========================
-                 SITE INFO
-            ========================== -->
 
             <div class="site-info">
 
@@ -96,16 +77,12 @@
                         alt=""
                     >
 
-                    <span id="visitor-count">
-                        ...
-                    </span>
+                    <span id="visitor-count">...</span>
 
                 </div>
 
 
-                <span class="info-separator">
-                    |
-                </span>
+                <span class="info-separator">|</span>
 
 
                 <div class="location-info">
@@ -115,160 +92,9 @@
                         alt=""
                     >
 
-                    <span>
-                        Poland
-                    </span>
+                    <span>Poland</span>
 
                 </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =========================
-             SPOTIFY BOX
-        ========================== -->
-
-        <section
-            class="box spotify-box"
-            id="spotify-box"
-        >
-
-            <!-- =========================
-                 SPOTIFY HEADER
-            ========================== -->
-
-            <div class="spotify-header">
-
-                <div class="spotify-brand">
-
-                    <span class="spotify-brand-dot"></span>
-
-                    <span>
-                        SPOTIFY
-                    </span>
-
-                </div>
-
-
-                <span
-                    class="spotify-status"
-                    id="spotify-status"
-                >
-                    OFFLINE
-                </span>
-
-            </div>
-
-
-            <!-- =========================
-                 CURRENT TRACK
-            ========================== -->
-
-            <div
-                class="spotify-content"
-                id="spotify-content"
-            >
-
-                <div class="spotify-cover-wrapper">
-
-                    <img
-                        src=""
-                        alt=""
-                        class="spotify-cover"
-                        id="spotify-cover"
-                    >
-
-                    <div
-                        class="spotify-cover-placeholder"
-                        id="spotify-cover-placeholder"
-                    >
-                        ♪
-                    </div>
-
-                </div>
-
-
-                <div class="spotify-info">
-
-                    <a
-                        href="#"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        class="spotify-title"
-                        id="spotify-title"
-                    >
-                        Nic nie jest odtwarzane
-                    </a>
-
-
-                    <p
-                        class="spotify-artist"
-                        id="spotify-artist"
-                    >
-                        Spotify
-                    </p>
-
-
-                    <div class="spotify-progress">
-
-                        <div
-                            class="spotify-progress-bar"
-                            id="spotify-progress-bar"
-                        ></div>
-
-                    </div>
-
-
-                    <div class="spotify-times">
-
-                        <span id="spotify-current-time">
-                            0:00
-                        </span>
-
-                        <span id="spotify-duration">
-                            0:00
-                        </span>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- =========================
-                 NOTHING PLAYING
-            ========================== -->
-
-            <div
-                class="spotify-empty is-hidden"
-                id="spotify-empty"
-            >
-
-                <span class="spotify-empty-title">
-                    Nothing playing
-                </span>
-
-                <span class="spotify-empty-text">
-                    Aktualnie nic nie jest odtwarzane
-                </span>
-
-            </div>
-
-
-            <!-- =========================
-                 SPOTIFY FOOTER
-            ========================== -->
-
-            <div class="spotify-footer">
-
-                <span>
-                    Currently playing
-                </span>
-
-                <span class="spotify-pulse"></span>
 
             </div>
 
@@ -277,10 +103,6 @@
     </main>
 
 
-    <!-- =========================
-         BACKGROUND VIDEO
-    ========================== -->
-
     <video
         autoplay
         muted
@@ -288,7 +110,6 @@
         playsinline
         id="background-video"
     >
-
         <source
             src="peaceful-meadow-moewalls-com.mp4"
             type="video/mp4"
@@ -299,10 +120,6 @@
     </video>
 
 
-    <!-- =========================
-         FOOTER
-    ========================== -->
-
     <footer>
 
         <p>
@@ -312,696 +129,110 @@
     </footer>
 
 
-    <!-- =====================================================
-         TYPING ANIMATION
-    ====================================================== -->
-
     <script>
+
+        /* =========================================
+           TYPING EFFECT
+        ========================================= */
+
+        const typingText = document.getElementById("typing-text");
 
         const text = "Kituś 🩶";
 
-        const typingElement =
-            document.getElementById(
-                "typing-text"
-            );
-
         let typingIndex = 0;
-
 
         function typeText() {
 
+            if (!typingText) {
+                return;
+            }
+
             if (typingIndex < text.length) {
+
+                typingText.textContent += text.charAt(typingIndex);
 
                 typingIndex++;
 
-                typingElement.textContent =
-                    text.slice(
-                        0,
-                        typingIndex
-                    );
-
-                setTimeout(
-                    typeText,
-                    130
-                );
-
-            } else {
-
-                setTimeout(
-                    deleteText,
-                    900
-                );
+                setTimeout(typeText, 100);
 
             }
 
         }
-
-
-        function deleteText() {
-
-            if (typingIndex > 0) {
-
-                typingIndex--;
-
-                typingElement.textContent =
-                    text.slice(
-                        0,
-                        typingIndex
-                    );
-
-                setTimeout(
-                    deleteText,
-                    55
-                );
-
-            } else {
-
-                setTimeout(
-                    typeText,
-                    350
-                );
-
-            }
-
-        }
-
 
         typeText();
 
-    </script>
 
+        /* =========================================
+           VISITOR COUNTER
+        ========================================= */
 
-    <!-- =====================================================
-         VISITOR COUNTER
-    ====================================================== -->
-
-    <script src="https://cdn.jsdelivr.net/npm/counterapi/dist/counter.browser.min.js"></script>
-
-    <script>
-
-        const counter =
-            new Counter({
-                workspace: "TWOJ_WORKSPACE"
-            });
-
-
-        counter
-            .up("visitors")
-            .then(result => {
-
-                const visitorElement =
-                    document.getElementById(
-                        "visitor-count"
-                    );
-
-                visitorElement.textContent =
-                    result.value;
-
-            })
-            .catch(() => {
-
-                const visitorElement =
-                    document.getElementById(
-                        "visitor-count"
-                    );
-
-                visitorElement.textContent =
-                    "0";
-
-            });
-
-    </script>
-
-
-    <!-- =====================================================
-         SPOTIFY CONFIG
-    ====================================================== -->
-
-    <script>
+        const visitorCount =
+            document.getElementById("visitor-count");
 
         /*
-         * Cloudflare Worker
+         * Wstaw tutaj swój własny workspace CounterAPI,
+         * jeśli już go posiadasz.
+         *
+         * Przykład:
+         *
+         * https://api.counterapi.dev/v1/TWOJ_WORKSPACE/visits/up
          */
 
-        const SPOTIFY_API =
-            "https://kitsun3kage-spotify.kitsun3-kage.workers.dev";
+        const counterUrl =
+            "https://api.counterapi.dev/v1/TWOJ_WORKSPACE/visits/up";
 
 
-        /*
-         * Spotify DOM elements
-         */
+        async function updateVisitorCount() {
 
-        const spotifyBox =
-            document.getElementById(
-                "spotify-box"
-            );
-
-
-        const spotifyContent =
-            document.getElementById(
-                "spotify-content"
-            );
-
-
-        const spotifyEmpty =
-            document.getElementById(
-                "spotify-empty"
-            );
-
-
-        const spotifyCover =
-            document.getElementById(
-                "spotify-cover"
-            );
-
-
-        const spotifyCoverPlaceholder =
-            document.getElementById(
-                "spotify-cover-placeholder"
-            );
-
-
-        const spotifyTitle =
-            document.getElementById(
-                "spotify-title"
-            );
-
-
-        const spotifyArtist =
-            document.getElementById(
-                "spotify-artist"
-            );
-
-
-        const spotifyStatus =
-            document.getElementById(
-                "spotify-status"
-            );
-
-
-        const spotifyProgressBar =
-            document.getElementById(
-                "spotify-progress-bar"
-            );
-
-
-        const spotifyCurrentTime =
-            document.getElementById(
-                "spotify-current-time"
-            );
-
-
-        const spotifyDuration =
-            document.getElementById(
-                "spotify-duration"
-            );
-
-
-        /*
-         * Spotify state
-         */
-
-        let spotifyProgressMs = 0;
-
-        let spotifyDurationMs = 0;
-
-        let spotifyPlaying = false;
-
-        let spotifyTrackId = null;
-
-
-        /* =================================================
-           FORMAT TIME
-        ================================================= */
-
-        function formatTime(milliseconds) {
-
-            if (
-                !milliseconds ||
-                milliseconds < 0
-            ) {
-
-                return "0:00";
-
-            }
-
-
-            const totalSeconds =
-                Math.floor(
-                    milliseconds / 1000
-                );
-
-
-            const minutes =
-                Math.floor(
-                    totalSeconds / 60
-                );
-
-
-            const seconds =
-                totalSeconds % 60;
-
-
-            return (
-                `${minutes}:${String(seconds).padStart(2, "0")}`
-            );
-
-        }
-
-
-        /* =================================================
-           SHOW EMPTY STATE
-        ================================================= */
-
-        function showSpotifyEmpty(
-            statusText = "OFFLINE"
-        ) {
-
-            spotifyContent.classList.add(
-                "is-hidden"
-            );
-
-
-            spotifyEmpty.classList.remove(
-                "is-hidden"
-            );
-
-
-            spotifyStatus.textContent =
-                statusText;
-
-
-            spotifyBox.classList.remove(
-                "spotify-active"
-            );
-
-
-            spotifyProgressBar.style.width =
-                "0%";
-
-
-            spotifyCurrentTime.textContent =
-                "0:00";
-
-
-            spotifyDuration.textContent =
-                "0:00";
-
-
-            spotifyPlaying =
-                false;
-
-        }
-
-
-        /* =================================================
-           SHOW CURRENT TRACK
-        ================================================= */
-
-        function showSpotifyTrack(data) {
-
-            if (
-                !data ||
-                !data.track
-            ) {
-
-                showSpotifyEmpty(
-                    "OFFLINE"
-                );
-
+            if (!visitorCount) {
                 return;
-
             }
-
-
-            const track =
-                data.track;
-
-
-            spotifyContent.classList.remove(
-                "is-hidden"
-            );
-
-
-            spotifyEmpty.classList.add(
-                "is-hidden"
-            );
-
-
-            /* Track name */
-
-            spotifyTitle.textContent =
-                track.name ||
-                "Unknown track";
-
-
-            /* Artist */
-
-            spotifyArtist.textContent =
-                track.artists ||
-                "Unknown artist";
-
-
-            /* Spotify URL */
-
-            if (track.spotifyUrl) {
-
-                spotifyTitle.href =
-                    track.spotifyUrl;
-
-            } else {
-
-                spotifyTitle.removeAttribute(
-                    "href"
-                );
-
-            }
-
-
-            /* Album cover */
-
-            if (track.image) {
-
-                spotifyCover.src =
-                    track.image;
-
-                spotifyCover.alt =
-                    `${track.name || "Track"} cover`;
-
-                spotifyCover.classList.add(
-                    "is-visible"
-                );
-
-
-                spotifyCoverPlaceholder.classList.add(
-                    "is-hidden"
-                );
-
-            } else {
-
-                spotifyCover.removeAttribute(
-                    "src"
-                );
-
-
-                spotifyCover.classList.remove(
-                    "is-visible"
-                );
-
-
-                spotifyCoverPlaceholder.classList.remove(
-                    "is-hidden"
-                );
-
-            }
-
-
-            /* Progress */
-
-            spotifyProgressMs =
-                Number(
-                    data.progressMs || 0
-                );
-
-
-            spotifyDurationMs =
-                Number(
-                    data.durationMs || 0
-                );
-
-
-            spotifyPlaying =
-                Boolean(
-                    data.playing
-                );
-
-
-            spotifyTrackId =
-                track.id || null;
-
-
-            /* Status */
-
-            spotifyStatus.textContent =
-                spotifyPlaying
-                    ? "PLAYING"
-                    : "PAUSED";
-
-
-            spotifyBox.classList.toggle(
-                "spotify-active",
-                spotifyPlaying
-            );
-
-
-            updateSpotifyProgress();
-
-        }
-
-
-        /* =================================================
-           UPDATE PROGRESS BAR
-        ================================================= */
-
-        function updateSpotifyProgress() {
-
-            if (
-                !spotifyDurationMs ||
-                spotifyDurationMs <= 0
-            ) {
-
-                spotifyProgressBar.style.width =
-                    "0%";
-
-            } else {
-
-                const percentage =
-                    Math.min(
-                        100,
-                        Math.max(
-                            0,
-                            (
-                                spotifyProgressMs /
-                                spotifyDurationMs
-                            ) * 100
-                        )
-                    );
-
-
-                spotifyProgressBar.style.width =
-                    `${percentage}%`;
-
-            }
-
-
-            spotifyCurrentTime.textContent =
-                formatTime(
-                    spotifyProgressMs
-                );
-
-
-            spotifyDuration.textContent =
-                formatTime(
-                    spotifyDurationMs
-                );
-
-        }
-
-
-        /* =================================================
-           FETCH SPOTIFY
-        ================================================= */
-
-        async function updateSpotify() {
 
             try {
 
                 const response =
-                    await fetch(
-                        `${SPOTIFY_API}/api/currently-playing`,
-                        {
-                            method: "GET",
-                            cache: "no-store"
-                        }
-                    );
-
-
-                /*
-                 * Worker doesn't have
-                 * Spotify authorization.
-                 */
-
-                if (
-                    response.status === 401
-                ) {
-
-                    showSpotifyEmpty(
-                        "NOT CONNECTED"
-                    );
-
-                    return;
-
-                }
-
-
-                /*
-                 * Other server error.
-                 */
+                    await fetch(counterUrl);
 
                 if (!response.ok) {
-
-                    showSpotifyEmpty(
-                        "OFFLINE"
-                    );
-
-                    return;
-
+                    throw new Error("Counter request failed");
                 }
-
 
                 const data =
                     await response.json();
 
+                if (data && data.count !== undefined) {
 
-                /*
-                 * Not connected.
-                 */
+                    visitorCount.textContent =
+                        data.count.toLocaleString("pl-PL");
 
-                if (
-                    !data.connected
-                ) {
+                } else {
 
-                    showSpotifyEmpty(
-                        "NOT CONNECTED"
-                    );
-
-                    return;
+                    visitorCount.textContent = "0";
 
                 }
-
-
-                /*
-                 * Nothing playing.
-                 */
-
-                if (
-                    !data.playing ||
-                    !data.track
-                ) {
-
-                    showSpotifyEmpty(
-                        "NOT PLAYING"
-                    );
-
-                    return;
-
-                }
-
-
-                /*
-                 * Track found.
-                 */
-
-                showSpotifyTrack(
-                    data
-                );
 
             } catch (error) {
 
                 console.error(
-                    "Spotify error:",
+                    "Nie udało się pobrać licznika odwiedzin:",
                     error
                 );
 
-
-                showSpotifyEmpty(
-                    "OFFLINE"
-                );
+                visitorCount.textContent = "0";
 
             }
 
         }
 
-
-        /*
-         * First request immediately.
-         */
-
-        updateSpotify();
+        updateVisitorCount();
 
 
-        /*
-         * Synchronize with Spotify
-         * every 15 seconds.
-         */
+        /* =========================================
+           3D MOUSE TILT
+        ========================================= */
 
-        setInterval(
-            updateSpotify,
-            15000
-        );
-
-
-        /*
-         * Local progress.
-         *
-         * Spotify remains the source
-         * of truth because every 15 seconds
-         * we request fresh data.
-         */
-
-        setInterval(() => {
-
-            if (
-                spotifyPlaying &&
-                spotifyDurationMs > 0
-            ) {
-
-                spotifyProgressMs += 1000;
-
-
-                if (
-                    spotifyProgressMs >=
-                    spotifyDurationMs
-                ) {
-
-                    spotifyProgressMs =
-                        spotifyDurationMs;
-
-                    spotifyPlaying =
-                        false;
-
-                }
-
-
-                updateSpotifyProgress();
-
-            }
-
-        }, 1000);
-
-    </script>
-
-
-    <!-- =====================================================
-         3D MOUSE PHYSICS
-         PROFILE + SPOTIFY
-    ====================================================== -->
-
-    <script>
-
-        /*
-         * Both boxes use exactly the same
-         * mouse physics.
-         *
-         * There is NO scale().
-         * There is NO translateY().
-         * Only rotateX / rotateY.
-         */
-
-        const tiltBoxes =
-            document.querySelectorAll(
-                ".profile-box, .spotify-box"
-            );
+        const tiltBox =
+            document.querySelector(".profile-box");
 
 
         const desktopPointer =
@@ -1010,80 +241,59 @@
             );
 
 
-        if (desktopPointer.matches) {
+        if (tiltBox && desktopPointer.matches) {
 
-            tiltBoxes.forEach(
-                (tiltBox) => {
+            tiltBox.addEventListener(
+                "mousemove",
+                (event) => {
 
-                    tiltBox.addEventListener(
-                        "mousemove",
-                        (event) => {
-
-                            const rect =
-                                tiltBox.getBoundingClientRect();
+                    const rect =
+                        tiltBox.getBoundingClientRect();
 
 
-                            const x =
-                                event.clientX -
-                                rect.left;
+                    const x =
+                        event.clientX - rect.left;
 
 
-                            const y =
-                                event.clientY -
-                                rect.top;
+                    const y =
+                        event.clientY - rect.top;
 
 
-                            const centerX =
-                                rect.width / 2;
+                    const centerX =
+                        rect.width / 2;
 
 
-                            const centerY =
-                                rect.height / 2;
+                    const centerY =
+                        rect.height / 2;
 
 
-                            /*
-                             * Exactly the same
-                             * calculation for both boxes.
-                             */
-
-                            const rotateY =
-                                (
-                                    (x - centerX) /
-                                    centerX
-                                ) * -6;
+                    const rotateY =
+                        ((x - centerX) / centerX) * -6;
 
 
-                            const rotateX =
-                                (
-                                    (centerY - y) /
-                                    centerY
-                                ) * -6;
+                    const rotateX =
+                        ((centerY - y) / centerY) * -6;
 
 
-                            tiltBox.style.transform =
-                                `
-                                perspective(1000px)
-                                rotateX(${rotateX}deg)
-                                rotateY(${rotateY}deg)
-                                `;
+                    tiltBox.style.transform = `
+                        perspective(1000px)
+                        rotateX(${rotateX}deg)
+                        rotateY(${rotateY}deg)
+                    `;
 
-                        }
-                    );
+                }
+            );
 
 
-                    tiltBox.addEventListener(
-                        "mouseleave",
-                        () => {
+            tiltBox.addEventListener(
+                "mouseleave",
+                () => {
 
-                            tiltBox.style.transform =
-                                `
-                                perspective(1000px)
-                                rotateX(0deg)
-                                rotateY(0deg)
-                                `;
-
-                        }
-                    );
+                    tiltBox.style.transform = `
+                        perspective(1000px)
+                        rotateX(0deg)
+                        rotateY(0deg)
+                    `;
 
                 }
             );
@@ -1093,5 +303,4 @@
     </script>
 
 </body>
-
 </html>
