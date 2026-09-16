@@ -131,10 +131,6 @@
 
     <script>
 
-        /* =========================================
-           TYPING EFFECT
-        ========================================= */
-
         const typingText = document.getElementById("typing-text");
 
         const text = "Kituś 🩶";
@@ -161,25 +157,11 @@
 
         typeText();
 
-
-        /* =========================================
-           VISITOR COUNTER
-        ========================================= */
-
         const visitorCount =
             document.getElementById("visitor-count");
 
-        /*
-         * Wstaw tutaj swój własny workspace CounterAPI,
-         * jeśli już go posiadasz.
-         *
-         * Przykład:
-         *
-         * https://api.counterapi.dev/v1/TWOJ_WORKSPACE/visits/up
-         */
-
         const counterUrl =
-            "https://api.counterapi.dev/v1/TWOJ_WORKSPACE/visits/up";
+            "https://api.counterapi.dev/v1/kitu-portfolio-2026/visits/up";
 
 
         async function updateVisitorCount() {
@@ -226,10 +208,6 @@
 
         updateVisitorCount();
 
-
-        /* =========================================
-           3D MOUSE TILT
-        ========================================= */
 
         const tiltBox =
             document.querySelector(".profile-box");
