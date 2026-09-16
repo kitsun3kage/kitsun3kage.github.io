@@ -27,8 +27,7 @@
                 <div class="profile-text">
 
                     <h1 id="typing-name">
-                        <span id="typing-text"></span>
-                        <span class="cursor">|</span>
+                        <span id="typing-text"></span><span class="cursor">|</span>
                     </h1>
 
                     <p>@kitsun3.kage</p>
@@ -110,6 +109,7 @@
         playsinline
         id="background-video"
     >
+
         <source
             src="peaceful-meadow-moewalls-com.mp4"
             type="video/mp4"
@@ -131,37 +131,109 @@
 
     <script>
 
-        const typingText = document.getElementById("typing-text");
+        /* =========================================
+           TYPING EFFECT
+        ========================================= */
+
+        const typingText =
+            document.getElementById("typing-text");
 
         const text = "Kituś 🩶";
 
         let typingIndex = 0;
 
-        function typeText() {
+        let deleting = false;
+
+
+        function typingAnimation() {
 
             if (!typingText) {
                 return;
             }
 
-            if (typingIndex < text.length) {
 
-                typingText.textContent += text.charAt(typingIndex);
+            if (!deleting) {
 
-                typingIndex++;
+                /* Wpisywanie */
 
-                setTimeout(typeText, 100);
+                if (typingIndex < text.length) {
+
+                    typingText.textContent =
+                        text.substring(
+                            0,
+                            typingIndex + 1
+                        );
+
+                    typingIndex++;
+
+                    setTimeout(
+                        typingAnimation,
+                        110
+                    );
+
+                } else {
+
+                    /* Tekst jest gotowy */
+
+                    deleting = true;
+
+                    setTimeout(
+                        typingAnimation,
+                        1500
+                    );
+
+                }
+
+            } else {
+
+                /* Usuwanie */
+
+                if (typingIndex > 0) {
+
+                    typingIndex--;
+
+                    typingText.textContent =
+                        text.substring(
+                            0,
+                            typingIndex
+                        );
+
+                    setTimeout(
+                        typingAnimation,
+                        70
+                    );
+
+                } else {
+
+                    /* Tekst całkowicie usunięty */
+
+                    deleting = false;
+
+                    setTimeout(
+                        typingAnimation,
+                        700
+                    );
+
+                }
 
             }
 
         }
 
-        typeText();
+
+        typingAnimation();
+
+
+        /* =========================================
+           VISITOR COUNTER
+        ========================================= */
 
         const visitorCount =
             document.getElementById("visitor-count");
 
+
         const counterUrl =
-            "https://api.counterapi.dev/v1/kitu-portfolio-2026/visits/up";
+            "https://api.counterapi.dev/v1/TWOJ_WORKSPACE/visits/up";
 
 
         async function updateVisitorCount() {
@@ -170,22 +242,33 @@
                 return;
             }
 
+
             try {
 
                 const response =
                     await fetch(counterUrl);
 
+
                 if (!response.ok) {
-                    throw new Error("Counter request failed");
+                    throw new Error(
+                        "Counter request failed"
+                    );
                 }
+
 
                 const data =
                     await response.json();
 
-                if (data && data.count !== undefined) {
+
+                if (
+                    data &&
+                    data.count !== undefined
+                ) {
 
                     visitorCount.textContent =
-                        data.count.toLocaleString("pl-PL");
+                        data.count.toLocaleString(
+                            "pl-PL"
+                        );
 
                 } else {
 
@@ -206,11 +289,18 @@
 
         }
 
+
         updateVisitorCount();
 
 
+        /* =========================================
+           3D MOUSE TILT
+        ========================================= */
+
         const tiltBox =
-            document.querySelector(".profile-box");
+            document.querySelector(
+                ".profile-box"
+            );
 
 
         const desktopPointer =
@@ -219,7 +309,10 @@
             );
 
 
-        if (tiltBox && desktopPointer.matches) {
+        if (
+            tiltBox &&
+            desktopPointer.matches
+        ) {
 
             tiltBox.addEventListener(
                 "mousemove",
@@ -230,11 +323,13 @@
 
 
                     const x =
-                        event.clientX - rect.left;
+                        event.clientX -
+                        rect.left;
 
 
                     const y =
-                        event.clientY - rect.top;
+                        event.clientY -
+                        rect.top;
 
 
                     const centerX =
@@ -246,11 +341,17 @@
 
 
                     const rotateY =
-                        ((x - centerX) / centerX) * -6;
+                        (
+                            (x - centerX) /
+                            centerX
+                        ) * -6;
 
 
                     const rotateX =
-                        ((centerY - y) / centerY) * -6;
+                        (
+                            (centerY - y) /
+                            centerY
+                        ) * -6;
 
 
                     tiltBox.style.transform = `
