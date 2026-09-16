@@ -42,10 +42,6 @@ body {
 }
 
 
-/* =========================================
-   BACKGROUND VIDEO
-========================================= */
-
 #background-video {
     position: fixed;
 
@@ -60,9 +56,6 @@ body {
 
     pointer-events: none;
 }
-
-
-/* Dark overlay */
 
 body::before {
     content: "";
@@ -83,9 +76,6 @@ body::before {
     pointer-events: none;
 }
 
-
-/* Subtle glass/dark atmosphere */
-
 body::after {
     content: "";
 
@@ -105,11 +95,6 @@ body::after {
     pointer-events: none;
 }
 
-
-/* =========================================
-   MAIN PAGE
-========================================= */
-
 .page {
     width: 100%;
 
@@ -127,11 +112,6 @@ body::after {
 
     padding: 24px;
 }
-
-
-/* =========================================
-   MAIN BOX
-========================================= */
 
 .box {
     width: min(500px, 100%);
@@ -155,11 +135,6 @@ body::after {
     overflow: hidden;
 }
 
-
-/* =========================================
-   PROFILE BOX
-========================================= */
-
 .profile-box {
     min-height: 220px;
 
@@ -176,10 +151,6 @@ body::after {
         transform 0.15s ease-out;
 }
 
-
-/* =========================================
-   PROFILE
-========================================= */
 
 .profile {
     display: flex;
@@ -238,11 +209,6 @@ body::after {
     letter-spacing: 0.1px;
 }
 
-
-/* =========================================
-   TYPING CURSOR
-========================================= */
-
 .cursor {
     display: inline-block;
 
@@ -267,11 +233,6 @@ body::after {
     }
 
 }
-
-
-/* =========================================
-   SOCIAL BUTTONS
-========================================= */
 
 .socials {
     display: flex;
@@ -336,11 +297,6 @@ body::after {
     opacity: 1;
 }
 
-
-/* =========================================
-   SITE INFO
-========================================= */
-
 .site-info {
     display: flex;
 
@@ -382,11 +338,6 @@ body::after {
     color: rgba(255, 255, 255, 0.22);
 }
 
-
-/* =========================================
-   FOOTER
-========================================= */
-
 footer {
     position: fixed;
 
@@ -413,11 +364,6 @@ footer p {
 
     text-align: center;
 }
-
-
-/* =========================================
-   MOBILE
-========================================= */
 
 @media (max-width: 600px) {
 
@@ -489,12 +435,6 @@ footer p {
     }
 
 }
-
-
-/* =========================================
-   SMALL PHONES
-========================================= */
-
 @media (max-width: 380px) {
 
     .profile-box {
