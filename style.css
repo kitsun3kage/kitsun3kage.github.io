@@ -375,7 +375,7 @@ body::after {
 
     align-items: center;
 
-    justify-content: center;
+    justify-content: flex-start;
 
     gap: 12px;
 
@@ -517,7 +517,7 @@ footer p {
 
     .site-info {
         margin-top: 24px;
-        justify-content: flex-start;
+        
         gap: 10px;
 
         font-size: 12px;
