@@ -26,7 +26,7 @@
 
                 <div class="profile-text">
 
-                    <h1 id="typing-name">
+                    <h1 id="typing-name" style="font-weight: 700;">
                         <span id="typing-text"></span><span class="cursor">|</span>
                     </h1>
 
@@ -35,7 +35,6 @@
                 </div>
 
             </div>
-
 
             <div class="socials">
 
@@ -50,7 +49,6 @@
                         alt="Instagram"
                     >
                 </button>
-
 
                 <button
                     class="social-button"
@@ -68,15 +66,15 @@
                     class="social-button"
                     type="button"
                     onclick="window.open('https://www.tiktok.com/@kitsun3.kage', '_blank')"
-                    aria-label="Instagram"
+                    aria-label="TikTok"
                 >
                     <img
                         src="tiktok-icon.svg"
                         alt="TikTok"
                     >
                 </button>
-            </div>
 
+            </div>
 
             <div class="site-info">
 
@@ -91,9 +89,7 @@
 
                 </div>
 
-
                 <span class="info-separator">|</span>
-
 
                 <div class="location-info">
 
@@ -112,7 +108,6 @@
 
     </main>
 
-
     <video
         autoplay
         muted
@@ -130,7 +125,6 @@
 
     </video>
 
-
     <footer>
 
         <p>
@@ -138,7 +132,6 @@
         </p>
 
     </footer>
-
 
     <script>
 
@@ -152,9 +145,7 @@
         const text = "Kituś 🩶";
 
         let typingIndex = 0;
-
         let deleting = false;
-
 
         function typingAnimation() {
 
@@ -162,10 +153,7 @@
                 return;
             }
 
-
             if (!deleting) {
-
-                /* Wpisywanie */
 
                 if (typingIndex < text.length) {
 
@@ -184,8 +172,6 @@
 
                 } else {
 
-                    /* Tekst jest gotowy */
-
                     deleting = true;
 
                     setTimeout(
@@ -196,8 +182,6 @@
                 }
 
             } else {
-
-                /* Usuwanie */
 
                 if (typingIndex > 0) {
 
@@ -216,8 +200,6 @@
 
                 } else {
 
-                    /* Tekst całkowicie usunięty */
-
                     deleting = false;
 
                     setTimeout(
@@ -231,7 +213,6 @@
 
         }
 
-
         typingAnimation();
 
 
@@ -242,10 +223,8 @@
         const visitorCount =
             document.getElementById("visitor-count");
 
-
         const counterUrl =
             "https://api.counterapi.dev/v2/kitsun3kage-portfolio/kitu-portfolio-2026/up";
-
 
         async function updateVisitorCount() {
 
@@ -253,12 +232,10 @@
                 return;
             }
 
-
             try {
 
                 const response =
                     await fetch(counterUrl);
-
 
                 if (!response.ok) {
                     throw new Error(
@@ -266,18 +243,17 @@
                     );
                 }
 
-
                 const data =
                     await response.json();
 
-
                 if (
                     data &&
-                    data.count !== undefined
+                    data.data &&
+                    data.data.up_count !== undefined
                 ) {
 
                     visitorCount.textContent =
-                        data.count.toLocaleString(
+                        data.data.up_count.toLocaleString(
                             "pl-PL"
                         );
 
@@ -300,7 +276,6 @@
 
         }
 
-
         updateVisitorCount();
 
 
@@ -313,12 +288,10 @@
                 ".profile-box"
             );
 
-
         const desktopPointer =
             window.matchMedia(
                 "(hover: hover) and (pointer: fine)"
             );
-
 
         if (
             tiltBox &&
@@ -332,24 +305,19 @@
                     const rect =
                         tiltBox.getBoundingClientRect();
 
-
                     const x =
                         event.clientX -
                         rect.left;
-
 
                     const y =
                         event.clientY -
                         rect.top;
 
-
                     const centerX =
                         rect.width / 2;
 
-
                     const centerY =
                         rect.height / 2;
-
 
                     const rotateY =
                         (
@@ -357,13 +325,11 @@
                             centerX
                         ) * -6;
 
-
                     const rotateX =
                         (
                             (centerY - y) /
                             centerY
                         ) * -6;
-
 
                     tiltBox.style.transform = `
                         perspective(1000px)
@@ -373,7 +339,6 @@
 
                 }
             );
-
 
             tiltBox.addEventListener(
                 "mouseleave",
