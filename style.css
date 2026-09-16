@@ -42,6 +42,10 @@ body {
 }
 
 
+/* =========================================
+   BACKGROUND VIDEO
+========================================= */
+
 #background-video {
     position: fixed;
 
@@ -56,6 +60,11 @@ body {
 
     pointer-events: none;
 }
+
+
+/* =========================================
+   DARK OVERLAY
+========================================= */
 
 body::before {
     content: "";
@@ -76,6 +85,11 @@ body::before {
     pointer-events: none;
 }
 
+
+/* =========================================
+   SUBTLE GLOW
+========================================= */
+
 body::after {
     content: "";
 
@@ -95,6 +109,11 @@ body::after {
     pointer-events: none;
 }
 
+
+/* =========================================
+   PAGE
+========================================= */
+
 .page {
     width: 100%;
 
@@ -108,10 +127,13 @@ body::after {
 
     justify-content: center;
 
-    gap: 16px;
-
     padding: 24px;
 }
+
+
+/* =========================================
+   BOX
+========================================= */
 
 .box {
     width: min(500px, 100%);
@@ -135,6 +157,11 @@ body::after {
     overflow: hidden;
 }
 
+
+/* =========================================
+   PROFILE BOX
+========================================= */
+
 .profile-box {
     min-height: 220px;
 
@@ -151,6 +178,10 @@ body::after {
         transform 0.15s ease-out;
 }
 
+
+/* =========================================
+   PROFILE
+========================================= */
 
 .profile {
     display: flex;
@@ -209,6 +240,11 @@ body::after {
     letter-spacing: 0.1px;
 }
 
+
+/* =========================================
+   TYPING CURSOR
+========================================= */
+
 .cursor {
     display: inline-block;
 
@@ -234,21 +270,13 @@ body::after {
 
 }
 
+
+/* =========================================
+   SOCIALS
+========================================= */
+
 .socials {
-    display: flex;
-
-    align-items: center;
-
-    gap: 10px;
-
-    margin-top: 26px;
-}
-
-
-.social-button {
-    width: 44px;
-
-    height: 44px;
+    width: 100%;
 
     display: flex;
 
@@ -256,51 +284,87 @@ body::after {
 
     justify-content: center;
 
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    gap: 24px;
 
-    border-radius: 14px;
+    margin-top: 28px;
+}
 
-    background: rgba(255, 255, 255, 0.055);
 
-    cursor: pointer;
+/* =========================================
+   SOCIAL BUTTON
+   SAM SVG — BEZ RAMKI I TŁA
+========================================= */
+
+.social-button {
+    width: 34px;
+
+    height: 34px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border: none;
+
+    outline: none;
+
+    background: transparent;
 
     padding: 0;
 
-    transition:
-        background 0.2s ease,
-        border-color 0.2s ease;
+    margin: 0;
+
+    cursor: pointer;
+
+    appearance: none;
+
+    -webkit-appearance: none;
 }
 
 
 .social-button img {
-    width: 20px;
+    display: block;
 
-    height: 20px;
+    width: 22px;
+
+    height: 22px;
 
     object-fit: contain;
 
-    opacity: 0.82;
+    opacity: 0.78;
+
+    filter:
+        drop-shadow(0 0 0 rgba(255, 255, 255, 0));
 
     transition:
-        opacity 0.2s ease;
+        opacity 0.2s ease,
+        filter 0.2s ease;
 }
 
 
-.social-button:hover {
-    background: rgba(255, 255, 255, 0.10);
-
-    border-color: rgba(255, 255, 255, 0.25);
-}
-
+/* Glow */
 
 .social-button:hover img {
     opacity: 1;
+
+    filter:
+        drop-shadow(0 0 5px rgba(255, 255, 255, 0.65))
+        drop-shadow(0 0 12px rgba(150, 120, 255, 0.35));
 }
+
+
+/* =========================================
+   SITE INFO
+========================================= */
 
 .site-info {
     display: flex;
 
     align-items: center;
+
+    justify-content: center;
 
     gap: 12px;
 
@@ -338,6 +402,11 @@ body::after {
     color: rgba(255, 255, 255, 0.22);
 }
 
+
+/* =========================================
+   FOOTER
+========================================= */
+
 footer {
     position: fixed;
 
@@ -365,12 +434,15 @@ footer p {
     text-align: center;
 }
 
+
+/* =========================================
+   MOBILE
+========================================= */
+
 @media (max-width: 600px) {
 
     .page {
         padding: 18px;
-
-        justify-content: center;
     }
 
 
@@ -412,7 +484,23 @@ footer p {
 
 
     .socials {
-        margin-top: 23px;
+        margin-top: 24px;
+
+        gap: 22px;
+    }
+
+
+    .social-button {
+        width: 32px;
+
+        height: 32px;
+    }
+
+
+    .social-button img {
+        width: 21px;
+
+        height: 21px;
     }
 
 
@@ -435,6 +523,12 @@ footer p {
     }
 
 }
+
+
+/* =========================================
+   SMALL PHONES
+========================================= */
+
 @media (max-width: 380px) {
 
     .profile-box {
@@ -463,10 +557,22 @@ footer p {
     }
 
 
-    .social-button {
-        width: 42px;
+    .socials {
+        gap: 20px;
+    }
 
-        height: 42px;
+
+    .social-button {
+        width: 30px;
+
+        height: 30px;
+    }
+
+
+    .social-button img {
+        width: 20px;
+
+        height: 20px;
     }
 
 
