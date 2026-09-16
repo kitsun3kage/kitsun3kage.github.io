@@ -3,63 +3,66 @@
     src: url("./fonts/Satoshi-Regular.ttf") format("truetype");
     font-weight: 400;
     font-style: normal;
+    font-display: swap;
 }
 
-
-/* =========================
-   RESET
-========================= */
 
 * {
     box-sizing: border-box;
-}
-
-
-html,
-body {
-    width: 100%;
-    min-height: 100%;
     margin: 0;
     padding: 0;
 }
 
 
+html {
+    width: 100%;
+    min-height: 100%;
+}
+
+
 body {
+    width: 100%;
     min-height: 100vh;
 
     overflow-x: hidden;
-    overflow-y: auto;
-
-    font-family: "Satoshi", sans-serif;
 
     background: #000;
 
     color: #fff;
+
+    font-family: "Satoshi", Arial, sans-serif;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    position: relative;
+
+    isolation: isolate;
 }
 
 
-/* =========================
+/* =========================================
    BACKGROUND VIDEO
-========================= */
+========================================= */
 
 #background-video {
     position: fixed;
 
-    top: 0;
-    left: 0;
+    inset: 0;
 
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
 
     object-fit: cover;
 
     z-index: -3;
+
+    pointer-events: none;
 }
 
 
-/* =========================
-   DARK OVERLAY
-========================= */
+/* Dark overlay */
 
 body::before {
     content: "";
@@ -72,24 +75,42 @@ body::before {
         linear-gradient(
             180deg,
             rgba(0, 0, 0, 0.22),
-            rgba(0, 0, 0, 0.38)
+            rgba(0, 0, 0, 0.42)
         );
 
-    pointer-events: none;
-
     z-index: -2;
+
+    pointer-events: none;
 }
 
 
-/* =========================
-   PAGE
-========================= */
+/* Subtle glass/dark atmosphere */
+
+body::after {
+    content: "";
+
+    position: fixed;
+
+    inset: 0;
+
+    background:
+        radial-gradient(
+            circle at 50% 40%,
+            rgba(120, 100, 255, 0.08),
+            transparent 45%
+        );
+
+    z-index: -1;
+
+    pointer-events: none;
+}
+
+
+/* =========================================
+   MAIN PAGE
+========================================= */
 
 .page {
-    position: relative;
-
-    z-index: 2;
-
     width: 100%;
 
     min-height: 100vh;
@@ -104,72 +125,45 @@ body::before {
 
     gap: 16px;
 
-    padding: 30px 20px 90px;
+    padding: 24px;
 }
 
 
-/* =========================
-   GENERAL BOX
-========================= */
+/* =========================================
+   MAIN BOX
+========================================= */
 
 .box {
-    position: relative;
-
     width: min(500px, 100%);
+
+    position: relative;
 
     border: 1px solid rgba(255, 255, 255, 0.18);
 
     border-radius: 30px;
 
-    /*
-     * CAŁKOWICIE PRZEZROCZYSTE TŁO
-     */
     background: rgba(0, 0, 0, 0.08);
 
-    /*
-     * Szklany efekt zostaje,
-     * ale nie ma ciemnego wypełnienia.
-     */
     backdrop-filter: blur(18px);
+
     -webkit-backdrop-filter: blur(18px);
 
     box-shadow:
-        0 24px 80px rgba(0, 0, 0, 0.32),
+        0 20px 60px rgba(0, 0, 0, 0.38),
         inset 0 1px 0 rgba(255, 255, 255, 0.06);
 
     overflow: hidden;
 }
 
 
-/* =========================
-   INNER BORDER
-========================= */
-
-.box::before {
-    content: "";
-
-    position: absolute;
-
-    inset: 0;
-
-    border-radius: inherit;
-
-    border: 1px solid rgba(255, 255, 255, 0.035);
-
-    pointer-events: none;
-}
-
-
-/* =========================================================
+/* =========================================
    PROFILE BOX
-========================================================= */
+========================================= */
 
 .profile-box {
-    padding: 30px;
-
     min-height: 220px;
 
-    text-align: center;
+    padding: 30px;
 
     transform:
         perspective(1000px)
@@ -178,121 +172,85 @@ body::before {
 
     transform-style: preserve-3d;
 
-    /*
-     * TYLKO fizyka 3D.
-     * ZERO powiększania.
-     */
     transition:
         transform 0.15s ease-out;
 }
 
 
-/* =========================
+/* =========================================
    PROFILE
-========================= */
+========================================= */
 
 .profile {
-    width: 100%;
-
     display: flex;
 
     align-items: center;
 
-    justify-content: flex-start;
-
-    gap: 20px;
+    gap: 18px;
 }
 
 
-/* =========================
-   LOGO
-========================= */
-
 .logo {
-    width: 80px;
-    height: 80px;
+    width: 76px;
 
-    flex-shrink: 0;
+    height: 76px;
+
+    flex: 0 0 76px;
 
     object-fit: cover;
 
     border-radius: 50%;
 
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.18);
 
     box-shadow:
-        0 8px 25px rgba(0, 0, 0, 0.35);
-
-    background: transparent;
+        0 8px 30px rgba(0, 0, 0, 0.35);
 }
 
-
-/* =========================
-   PROFILE TEXT
-========================= */
 
 .profile-text {
     min-width: 0;
-
-    display: flex;
-
-    flex-direction: column;
-
-    align-items: flex-start;
-
-    justify-content: center;
-
-    text-align: left;
 }
 
-
-/* =========================
-   NAME
-========================= */
 
 .profile-text h1 {
-    margin: 0;
+    font-size: clamp(25px, 5vw, 34px);
 
-    color: #fff;
-
-    font-size: clamp(
-        2.1rem,
-        7vw,
-        3rem
-    );
-
-    font-weight: 700;
-
-    line-height: 1.05;
-
-    text-align: left;
-
-    white-space: nowrap;
-
-    filter:
-        drop-shadow(
-            0 0 7px
-            rgba(255, 255, 255, 0.55)
-        );
-}
-
-
-/* =========================
-   CURSOR
-========================= */
-
-.cursor {
-    margin-left: 2px;
-
-    color: #fff;
+    line-height: 1.1;
 
     font-weight: 400;
 
-    opacity: 0.95;
+    letter-spacing: -0.8px;
 
-    animation:
-        cursorBlink 0.9s
-        infinite;
+    white-space: nowrap;
+}
+
+
+.profile-text p {
+    margin-top: 7px;
+
+    font-size: 15px;
+
+    line-height: 1.2;
+
+    color: rgba(255, 255, 255, 0.58);
+
+    letter-spacing: 0.1px;
+}
+
+
+/* =========================================
+   TYPING CURSOR
+========================================= */
+
+.cursor {
+    display: inline-block;
+
+    margin-left: 2px;
+
+    color: rgba(255, 255, 255, 0.8);
+
+    animation: cursorBlink 0.9s infinite;
 }
 
 
@@ -305,134 +263,98 @@ body::before {
 
     46%,
     100% {
-        opacity: 0.25;
+        opacity: 0;
     }
 
 }
 
 
-/* =========================
-   USERNAME
-========================= */
-
-.profile-text p {
-    margin: 7px 0 0;
-
-    color: #a9a9a9;
-
-    font-size: 1.2rem;
-
-    font-weight: 400;
-
-    line-height: 1;
-
-    text-align: left;
-}
-
-
-/* =========================
-   SOCIALS
-========================= */
+/* =========================================
+   SOCIAL BUTTONS
+========================================= */
 
 .socials {
-    width: 100%;
-
-    display: flex;
-
-    justify-content: center;
-
-    align-items: center;
-
-    gap: 14px;
-
-    margin-top: 28px;
-}
-
-
-/* =========================
-   SOCIAL BUTTON
-========================= */
-
-.social-button {
-    width: 45px;
-    height: 45px;
-
-    padding: 0;
-
-    display: flex;
-
-    justify-content: center;
-
-    align-items: center;
-
-    background: transparent;
-
-    border: none;
-
-    cursor: pointer;
-}
-
-
-/* =========================
-   SOCIAL ICON
-========================= */
-
-.social-button img {
-    width: 45px;
-    height: 45px;
-
-    object-fit: contain;
-
-    filter:
-        drop-shadow(
-            0 0 5px
-            rgba(255, 255, 255, 0.65)
-        );
-
-    transition:
-        transform 0.2s ease,
-        filter 0.2s ease;
-}
-
-
-.social-button:hover img {
-    transform: scale(1.1);
-
-    filter:
-        drop-shadow(
-            0 0 9px
-            rgba(255, 255, 255, 0.85)
-        );
-}
-
-
-/* =========================
-   SITE INFO
-========================= */
-
-.site-info {
-    position: absolute;
-
-    left: 20px;
-    bottom: 18px;
-
     display: flex;
 
     align-items: center;
 
     gap: 10px;
 
-    color: #fff;
-
-    font-size: 0.95rem;
-
-    z-index: 10;
+    margin-top: 26px;
 }
 
 
-/* =========================
-   VISITOR + LOCATION
-========================= */
+.social-button {
+    width: 44px;
+
+    height: 44px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border: 1px solid rgba(255, 255, 255, 0.15);
+
+    border-radius: 14px;
+
+    background: rgba(255, 255, 255, 0.055);
+
+    cursor: pointer;
+
+    padding: 0;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
+
+
+.social-button img {
+    width: 20px;
+
+    height: 20px;
+
+    object-fit: contain;
+
+    opacity: 0.82;
+
+    transition:
+        opacity 0.2s ease;
+}
+
+
+.social-button:hover {
+    background: rgba(255, 255, 255, 0.10);
+
+    border-color: rgba(255, 255, 255, 0.25);
+}
+
+
+.social-button:hover img {
+    opacity: 1;
+}
+
+
+/* =========================================
+   SITE INFO
+========================================= */
+
+.site-info {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    margin-top: 28px;
+
+    color: rgba(255, 255, 255, 0.55);
+
+    font-size: 13px;
+}
+
 
 .visitor-count,
 .location-info {
@@ -444,793 +366,172 @@ body::before {
 }
 
 
-/* =========================
-   INFO ICONS
-========================= */
-
 .visitor-count img,
 .location-info img {
-    width: 18px;
-    height: 18px;
+    width: 15px;
+
+    height: 15px;
 
     object-fit: contain;
 
-    filter:
-        drop-shadow(
-            0 0 4px
-            rgba(255, 255, 255, 0.5)
-        );
+    opacity: 0.65;
 }
 
-
-/* =========================
-   SEPARATOR
-========================= */
 
 .info-separator {
-    color: #777;
-
-    font-weight: 400;
-
-    margin: 0 2px;
+    color: rgba(255, 255, 255, 0.22);
 }
 
 
-/* =========================
-   VISITOR NUMBER
-========================= */
-
-#visitor-count {
-    color: #fff;
-
-    font-weight: 400;
-}
-
-
-/* =========================================================
-   SPOTIFY BOX
-========================================================= */
-
-.spotify-box {
-    padding: 20px;
-
-    min-height: 138px;
-
-    /*
-     * IDENTYCZNA FIZYKA JAK GŁÓWNY BOX
-     */
-    transform:
-        perspective(1000px)
-        rotateX(0deg)
-        rotateY(0deg);
-
-    transform-style: preserve-3d;
-
-    transition:
-        transform 0.15s ease-out;
-
-    /*
-     * Tło przezroczyste
-     */
-    background: rgba(0, 0, 0, 0.08);
-}
-
-
-/* =========================
-   SPOTIFY ACTIVE
-========================= */
-
-.spotify-box.spotify-active {
-    border-color:
-        rgba(255, 255, 255, 0.18);
-
-    box-shadow:
-        0 24px 80px rgba(0, 0, 0, 0.32),
-        inset 0 1px 0 rgba(255, 255, 255, 0.06);
-}
-
-
-/* =========================
-   SPOTIFY HEADER
-========================= */
-
-.spotify-header {
-    width: 100%;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    margin-bottom: 14px;
-}
-
-
-.spotify-brand {
-    display: flex;
-
-    align-items: center;
-
-    gap: 8px;
-
-    color: #bdbdbd;
-
-    font-size: 0.66rem;
-
-    font-weight: 700;
-
-    letter-spacing: 0.12em;
-}
-
-
-.spotify-brand-dot {
-    width: 8px;
-    height: 8px;
-
-    border-radius: 50%;
-
-    background: #555;
-
-    box-shadow:
-        0 0 5px
-        rgba(255, 255, 255, 0.15);
-
-    transition:
-        background 0.25s ease,
-        box-shadow 0.25s ease;
-}
-
-
-.spotify-active
-.spotify-brand-dot {
-    background: #1ed760;
-
-    box-shadow:
-        0 0 9px
-        rgba(30, 215, 96, 0.8);
-}
-
-
-.spotify-status {
-    color: #666;
-
-    font-size: 0.6rem;
-
-    font-weight: 700;
-
-    letter-spacing: 0.1em;
-}
-
-
-.spotify-active
-.spotify-status {
-    color: #1ed760;
-}
-
-
-/* =========================
-   SPOTIFY CONTENT
-========================= */
-
-.spotify-content {
-    display: flex;
-
-    align-items: center;
-
-    gap: 14px;
-
-    min-width: 0;
-}
-
-
-.spotify-content.is-hidden {
-    display: none;
-}
-
-
-/* =========================
-   SPOTIFY COVER
-========================= */
-
-.spotify-cover-wrapper {
-    position: relative;
-
-    width: 68px;
-    height: 68px;
-
-    flex-shrink: 0;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    overflow: hidden;
-
-    border-radius: 13px;
-
-    background: rgba(0, 0, 0, 0.08);
-
-    border: 1px solid
-        rgba(255, 255, 255, 0.08);
-}
-
-
-.spotify-cover {
-    width: 100%;
-    height: 100%;
-
-    display: none;
-
-    object-fit: contain;
-
-    background: transparent;
-}
-
-
-.spotify-cover.is-visible {
-    display: block;
-}
-
-
-.spotify-cover-placeholder {
-    color: #555;
-
-    font-size: 1.5rem;
-}
-
-
-.spotify-cover-placeholder.is-hidden {
-    display: none;
-}
-
-
-/* =========================
-   SPOTIFY INFO
-========================= */
-
-.spotify-info {
-    min-width: 0;
-
-    flex: 1;
-}
-
-
-.spotify-title {
-    display: block;
-
-    overflow: hidden;
-
-    color: #fff;
-
-    font-size: 0.98rem;
-
-    font-weight: 700;
-
-    line-height: 1.25;
-
-    text-decoration: none;
-
-    text-overflow: ellipsis;
-
-    white-space: nowrap;
-}
-
-
-.spotify-title:hover {
-    text-decoration: underline;
-}
-
-
-.spotify-artist {
-    margin: 4px 0 0;
-
-    overflow: hidden;
-
-    color: #9a9a9a;
-
-    font-size: 0.78rem;
-
-    line-height: 1.2;
-
-    text-overflow: ellipsis;
-
-    white-space: nowrap;
-}
-
-
-/* =========================
-   SPOTIFY PROGRESS
-========================= */
-
-.spotify-progress {
-    width: 100%;
-
-    height: 3px;
-
-    margin-top: 11px;
-
-    overflow: hidden;
-
-    background:
-        rgba(255, 255, 255, 0.1);
-
-    border-radius: 999px;
-}
-
-
-.spotify-progress-bar {
-    width: 0;
-
-    height: 100%;
-
-    background: #1ed760;
-
-    border-radius: 999px;
-
-    box-shadow:
-        0 0 7px
-        rgba(30, 215, 96, 0.5);
-
-    transition:
-        width 0.8s linear;
-}
-
-
-/* =========================
-   SPOTIFY TIMES
-========================= */
-
-.spotify-times {
-    display: flex;
-
-    justify-content: space-between;
-
-    margin-top: 4px;
-
-    color: #606060;
-
-    font-size: 0.61rem;
-}
-
-
-/* =========================
-   EMPTY SPOTIFY
-========================= */
-
-.spotify-empty {
-    display: none;
-
-    min-height: 68px;
-
-    align-items: center;
-
-    justify-content: center;
-
-    flex-direction: column;
-
-    gap: 4px;
-
-    text-align: center;
-}
-
-
-.spotify-empty.is-hidden {
-    display: none;
-}
-
-
-.spotify-empty-title {
-    color: #d0d0d0;
-
-    font-size: 0.85rem;
-
-    font-weight: 700;
-}
-
-
-.spotify-empty-text {
-    color: #666;
-
-    font-size: 0.72rem;
-}
-
-
-/* =========================
-   SPOTIFY FOOTER
-========================= */
-
-.spotify-footer {
-    margin-top: 13px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: flex-end;
-
-    gap: 7px;
-
-    color: #505050;
-
-    font-size: 0.6rem;
-
-    letter-spacing: 0.03em;
-}
-
-
-.spotify-pulse {
-    width: 5px;
-    height: 5px;
-
-    border-radius: 50%;
-
-    background: #444;
-}
-
-
-.spotify-active
-.spotify-pulse {
-    background: #1ed760;
-
-    box-shadow:
-        0 0 7px
-        rgba(30, 215, 96, 0.7);
-
-    animation:
-        spotifyPulse 1.6s
-        infinite;
-}
-
-
-@keyframes spotifyPulse {
-
-    0%,
-    100% {
-        opacity: 0.45;
-    }
-
-    50% {
-        opacity: 1;
-    }
-
-}
-
-
-/* =========================
+/* =========================================
    FOOTER
-========================= */
+========================================= */
 
 footer {
     position: fixed;
 
+    bottom: 18px;
+
     left: 0;
-    bottom: 0;
 
     width: 100%;
 
-    padding: 18px 20px;
+    display: flex;
 
-    color: #555;
-
-    text-align: center;
-
-    z-index: 5;
+    justify-content: center;
 
     pointer-events: none;
 }
 
 
 footer p {
-    margin: 0;
+    font-size: 11px;
 
-    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.35);
+
+    letter-spacing: 0.1px;
+
+    text-align: center;
 }
 
 
-/* =========================================================
-   DESKTOP
-========================================================= */
-
-@media (min-width: 701px) {
-
-    .page {
-        padding-top: 35px;
-        padding-bottom: 85px;
-    }
-
-
-    /*
-     * ŻADNEGO hover scale.
-     * ŻADNEgo przesuwania Spotify.
-     *
-     * Jedyna fizyka to obrót 3D
-     * sterowany myszką.
-     */
-
-    .profile-box,
-    .spotify-box {
-        will-change: transform;
-    }
-
-}
-
-
-/* =========================================================
+/* =========================================
    MOBILE
-========================================================= */
+========================================= */
 
-@media (max-width: 700px) {
+@media (max-width: 600px) {
 
     .page {
-        justify-content: flex-start;
+        padding: 18px;
 
-        min-height: 100vh;
-
-        padding:
-            25px
-            15px
-            85px;
-    }
-
-
-    .box {
-        width: 100%;
-
-        border-radius: 24px;
+        justify-content: center;
     }
 
 
     .profile-box {
         padding: 24px;
 
-        min-height: 215px;
+        border-radius: 26px;
+
+        min-height: 0;
     }
 
 
     .profile {
-        gap: 15px;
+        gap: 14px;
     }
 
 
     .logo {
-        width: 70px;
-        height: 70px;
+        width: 62px;
+
+        height: 62px;
+
+        flex-basis: 62px;
     }
 
 
     .profile-text h1 {
-        font-size: 2.3rem;
+        font-size: 25px;
+
+        letter-spacing: -0.5px;
     }
 
 
     .profile-text p {
-        font-size: 1.1rem;
+        font-size: 14px;
+
+        margin-top: 6px;
     }
 
 
     .socials {
-        gap: 14px;
-
-        margin-top: 27px;
-    }
-
-
-    .spotify-box {
-        padding: 18px;
-
-        min-height: 135px;
-    }
-
-
-    .spotify-cover-wrapper {
-        width: 62px;
-        height: 62px;
-
-        border-radius: 11px;
-    }
-
-
-    .spotify-title {
-        font-size: 0.92rem;
-    }
-
-
-    .spotify-artist {
-        font-size: 0.75rem;
+        margin-top: 23px;
     }
 
 
     .site-info {
-        left: 18px;
-        bottom: 15px;
+        margin-top: 24px;
 
-        font-size: 0.85rem;
+        gap: 10px;
 
-        gap: 8px;
+        font-size: 12px;
     }
 
 
-    .visitor-count,
-    .location-info {
-        gap: 5px;
+    footer {
+        bottom: 12px;
     }
 
 
-    .visitor-count img,
-    .location-info img {
-        width: 17px;
-        height: 17px;
+    footer p {
+        font-size: 10px;
     }
 
 }
 
 
-/* =========================================================
-   SMALL MOBILE
-========================================================= */
+/* =========================================
+   SMALL PHONES
+========================================= */
 
 @media (max-width: 380px) {
-
-    .page {
-        padding:
-            20px
-            12px
-            78px;
-
-        gap: 12px;
-    }
-
-
-    .box {
-        border-radius: 22px;
-    }
-
 
     .profile-box {
         padding: 20px;
 
-        min-height: 205px;
-    }
-
-
-    .profile {
-        gap: 12px;
+        border-radius: 23px;
     }
 
 
     .logo {
-        width: 62px;
-        height: 62px;
-    }
-
-
-    .profile-text h1 {
-        font-size: 1.9rem;
-    }
-
-
-    .profile-text p {
-        font-size: 1rem;
-    }
-
-
-    .socials {
-        gap: 12px;
-
-        margin-top: 24px;
-    }
-
-
-    .social-button,
-    .social-button img {
-        width: 43px;
-        height: 43px;
-    }
-
-
-    .site-info {
-        left: 15px;
-        bottom: 13px;
-
-        font-size: 0.78rem;
-
-        gap: 6px;
-    }
-
-
-    .visitor-count,
-    .location-info {
-        gap: 4px;
-    }
-
-
-    .visitor-count img,
-    .location-info img {
-        width: 16px;
-        height: 16px;
-    }
-
-
-    .spotify-box {
-        padding: 16px;
-
-        min-height: 128px;
-    }
-
-
-    .spotify-header {
-        margin-bottom: 11px;
-    }
-
-
-    .spotify-cover-wrapper {
         width: 56px;
+
         height: 56px;
-    }
 
-
-    .spotify-content {
-        gap: 11px;
-    }
-
-
-    .spotify-title {
-        font-size: 0.85rem;
-    }
-
-
-    .spotify-artist {
-        font-size: 0.7rem;
-    }
-
-
-    .spotify-footer {
-        margin-top: 10px;
-
-        font-size: 0.55rem;
-    }
-
-}
-
-
-/* =========================================================
-   VERY SMALL SCREENS
-========================================================= */
-
-@media (max-width: 330px) {
-
-    .profile {
-        align-items: flex-start;
-    }
-
-
-    .logo {
-        width: 55px;
-        height: 55px;
+        flex-basis: 56px;
     }
 
 
     .profile-text h1 {
-        font-size: 1.65rem;
+        font-size: 22px;
     }
 
 
     .profile-text p {
-        font-size: 0.9rem;
+        font-size: 13px;
+    }
+
+
+    .social-button {
+        width: 42px;
+
+        height: 42px;
     }
 
 
     .site-info {
-        font-size: 0.7rem;
-    }
-
-
-    .spotify-cover-wrapper {
-        width: 50px;
-        height: 50px;
+        gap: 8px;
     }
 
 }
