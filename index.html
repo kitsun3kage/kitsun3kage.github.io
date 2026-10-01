@@ -26,7 +26,8 @@
         <source src="music.mp3" type="audio/mpeg">
     </audio>
 
-    <div class="audio-control" id="audio-control">
+    <!-- Odtwarzacz umieszczony w prawym dolnym rogu -->
+    <div class="audio-control bottom-right" id="audio-control">
         <div class="audio-control-inner">
             <div class="audio-icon">
                 <span class="audio-note">♪</span>
@@ -136,12 +137,11 @@
             }
         }
 
-        // --- BARDZO PŁYNNY BASS SHAKE (LERP / SMOOTHING) ---
+        // --- BARDZO PŁYNNY BASS SHAKE Z ZWIĘKSZONĄ AMPLITUDĄ ---
         let audioCtx, analyser, dataArray, sourceNode;
         let isAudioSetup = false;
         let currentTiltX = 0, currentTiltY = 0;
 
-        // Zmienne interpolacji pozycji trzęsienia
         let targetShakeX = 0, currentShakeX = 0;
         let targetShakeY = 0, currentShakeY = 0;
         let targetScale = 1, currentScale = 1;
@@ -153,9 +153,8 @@
                 audioCtx = new AudioContext();
                 analyser = audioCtx.createAnalyser();
                 
-                // Samples out = 128 -> fftSize = 256
                 analyser.fftSize = 256; 
-                analyser.smoothingTimeConstant = 0; // Natychmiastowy odczyt surowego basu
+                analyser.smoothingTimeConstant = 0; 
 
                 sourceNode = audioCtx.createMediaElementSource(backgroundMusic);
                 sourceNode.connect(analyser);
@@ -184,10 +183,9 @@
             } else {
                 analyser.getByteFrequencyData(dataArray);
 
-                // Zakres częstotliwości: 20Hz - 130Hz
                 const sampleRate = audioCtx.sampleRate || 44100;
                 const nyquist = sampleRate / 2;
-                const binCount = analyser.frequencyBinCount; // 128
+                const binCount = analyser.frequencyBinCount; 
 
                 let startBin = Math.floor((20 / nyquist) * binCount);
                 let endBin = Math.ceil((130 / nyquist) * binCount);
@@ -202,7 +200,6 @@
                 let count = (endBin - startBin + 1);
                 let rawBass = (bassSum / count) / 255;
 
-                // Output multiplier = 56
                 const outputMultiplier = 56;
                 let bassValue = rawBass * outputMultiplier;
 
@@ -211,10 +208,10 @@
                 if (bassValue > threshold) {
                     const intensity = Math.min((bassValue - threshold) / (outputMultiplier - threshold), 1.0);
 
-                    // Amplituda docelowa
-                    targetShakeX = (Math.random() - 0.5) * intensity * 6;
-                    targetShakeY = (Math.random() - 0.5) * intensity * 6;
-                    targetScale = 1 + (intensity * 0.009);
+                    // Mocniejsza amplituda X i Y z wygładzaniem
+                    targetShakeX = (Math.random() - 0.5) * intensity * 20;
+                    targetShakeY = (Math.random() - 0.5) * intensity * 20;
+                    targetScale = 1 + (intensity * 0.025);
                 } else {
                     targetShakeX = 0;
                     targetShakeY = 0;
@@ -222,10 +219,10 @@
                 }
             }
 
-            // Płynna interpolacja (wygładzanie drgań)
-            currentShakeX = lerp(currentShakeX, targetShakeX, 0.25);
-            currentShakeY = lerp(currentShakeY, targetShakeY, 0.25);
-            currentScale = lerp(currentScale, targetScale, 0.2);
+            // Płynna interpolacja pozycji
+            currentShakeX = lerp(currentShakeX, targetShakeX, 0.18);
+            currentShakeY = lerp(currentShakeY, targetShakeY, 0.18);
+            currentScale = lerp(currentScale, targetScale, 0.15);
 
             profileBox.style.transform = `perspective(1000px) rotateX(${currentTiltX}deg) rotateY(${currentTiltY}deg) translate(${currentShakeX.toFixed(2)}px, ${currentShakeY.toFixed(2)}px) scale(${currentScale.toFixed(4)})`;
         }
