@@ -13,73 +13,36 @@
 <body>
 
     <div class="music-start-screen" id="music-start-screen">
-
         <div class="music-start-content">
-
             <h2>Czy chcesz włączyć muzykę?</h2>
-
             <div class="music-start-buttons">
-
-                <button
-                    type="button"
-                    class="music-start-button"
-                    id="music-yes"
-                >
-                    Tak
-                </button>
-
-                <button
-                    type="button"
-                    class="music-start-button secondary"
-                    id="music-no"
-                >
-                    Nie
-                </button>
-
+                <button type="button" class="music-start-button" id="music-yes">Tak</button>
+                <button type="button" class="music-start-button secondary" id="music-no">Nie</button>
             </div>
-
         </div>
-
     </div>
 
-    <audio
-        id="background-music"
-        loop
-        preload="auto"
-    >
+    <audio id="background-music" loop preload="auto">
         <source src="music.mp3" type="audio/mpeg">
     </audio>
 
     <div class="audio-control" id="audio-control">
-
         <div class="audio-control-inner">
-
             <div class="audio-icon">
                 <span class="audio-note">♪</span>
             </div>
 
             <div class="audio-info" id="audio-info">
-
                 <div class="audio-cover">
                     <span>♪</span>
                 </div>
-
                 <div class="audio-text">
-
-                    <span class="audio-artist">
-                        Kitsun3 Kage
-                    </span>
-
-                    <span class="audio-title">
-                        Peaceful Music
-                    </span>
-
+                    <span class="audio-artist">Kitsun3 Kage</span>
+                    <span class="audio-title">Peaceful Music</span>
                 </div>
-
             </div>
 
             <div class="audio-slider-wrapper">
-
                 <input
                     type="range"
                     id="audio-volume"
@@ -88,462 +51,190 @@
                     value="50"
                     aria-label="Głośność muzyki"
                 >
-
             </div>
-
         </div>
-
     </div>
 
     <main class="page">
-
         <section class="box profile-box" id="profile-box">
-
             <div class="profile">
-
-                <img
-                    src="logo.jpeg"
-                    alt="Kitsun3 Kage"
-                    class="logo"
-                >
-
+                <img src="logo.jpeg" alt="Kitsun3 Kage" class="logo">
                 <div class="profile-text">
-
                     <h1 id="typing-name" style="font-weight: 700;">
                         <span id="typing-text"></span><span class="cursor">|</span>
                     </h1>
-
                     <p>@kitsun3.kage</p>
-
                 </div>
-
             </div>
 
             <div class="socials">
-
-                <button
-                    class="social-button"
-                    type="button"
-                    onclick="window.open('https://www.instagram.com/kitsun3.kage', '_blank')"
-                    aria-label="Instagram"
-                >
-                    <img
-                        src="instagram-icon.svg"
-                        alt="Instagram"
-                    >
+                <button class="social-button" type="button" onclick="window.open('https://www.instagram.com/kitsun3.kage', '_blank')" aria-label="Instagram">
+                    <img src="instagram-icon.svg" alt="Instagram">
                 </button>
-
-                <button
-                    class="social-button"
-                    type="button"
-                    onclick="window.open('https://github.com/kitsun3kage', '_blank')"
-                    aria-label="GitHub"
-                >
-                    <img
-                        src="github-icon.svg"
-                        alt="GitHub"
-                    >
+                <button class="social-button" type="button" onclick="window.open('https://github.com/kitsun3kage', '_blank')" aria-label="GitHub">
+                    <img src="github-icon.svg" alt="GitHub">
                 </button>
-
-                <button
-                    class="social-button"
-                    type="button"
-                    onclick="window.open('https://www.tiktok.com/@kitsun3.kage', '_blank')"
-                    aria-label="TikTok"
-                >
-                    <img
-                        src="tiktok-icon.svg"
-                        alt="TikTok"
-                    >
+                <button class="social-button" type="button" onclick="window.open('https://www.tiktok.com/@kitsun3.kage', '_blank')" aria-label="TikTok">
+                    <img src="tiktok-icon.svg" alt="TikTok">
                 </button>
-
-                <button
-                    class="social-button"
-                    type="button"
-                    onclick="window.open('https://www.youtube.com/@kitsun3kage', '_blank')"
-                    aria-label="YouTube"
-                >
-                    <img
-                        src="youtube-icon.svg"
-                        alt="YouTube"
-                    >
+                <button class="social-button" type="button" onclick="window.open('https://www.youtube.com/@kitsun3kage', '_blank')" aria-label="YouTube">
+                    <img src="youtube-icon.svg" alt="YouTube">
                 </button>
-
-                <button
-                    class="social-button"
-                    type="button"
-                    onclick="window.open('https://pl.wikipedia.org/wiki/Wikipedysta:Kitsun3_Kage', '_blank')"
-                    aria-label="Wikipedia"
-                >
-                    <img
-                        src="wikipedia-icon.svg"
-                        alt="Wikipedia"
-                    >
+                <button class="social-button" type="button" onclick="window.open('https://pl.wikipedia.org/wiki/Wikipedysta:Kitsun3_Kage', '_blank')" aria-label="Wikipedia">
+                    <img src="wikipedia-icon.svg" alt="Wikipedia">
                 </button>
-
             </div>
 
             <div class="site-info">
-
                 <div class="visitor-count">
-
-                    <img
-                        src="views.svg"
-                        alt=""
-                    >
-
+                    <img src="views.svg" alt="">
                     <span id="visitor-count">...</span>
-
                 </div>
-
                 <span class="info-separator">|</span>
-
                 <div class="location-info">
-
-                    <img
-                        src="location.svg"
-                        alt=""
-                    >
-
+                    <img src="location.svg" alt="">
                     <span>Poland</span>
-
                 </div>
-
             </div>
-
         </section>
-
     </main>
 
-    <video
-        autoplay
-        muted
-        loop
-        playsinline
-        id="background-video"
-    >
-
-        <source
-            src="peaceful-meadow-moewalls-com.mp4"
-            type="video/mp4"
-        >
-
+    <video autoplay muted loop playsinline id="background-video">
+        <source src="peaceful-meadow-moewalls-com.mp4" type="video/mp4">
         Twoja przeglądarka nie obsługuje odtwarzania wideo.
-
     </video>
 
     <footer>
-
-        <p>
-            &copy; 2026 Kitsun3 Kage. All rights reserved.
-        </p>
-
+        <p>&copy; 2026 Kitsun3 Kage. All rights reserved.</p>
     </footer>
 
     <script>
-
-        const musicStartScreen =
-            document.getElementById("music-start-screen");
-
-        const musicYes =
-            document.getElementById("music-yes");
-
-        const musicNo =
-            document.getElementById("music-no");
-
-        const backgroundMusic =
-            document.getElementById("background-music");
-
-        const audioControl =
-            document.getElementById("audio-control");
-
-        const audioVolume =
-            document.getElementById("audio-volume");
-
-        const audioInfo =
-            document.getElementById("audio-info");
+        const musicStartScreen = document.getElementById("music-start-screen");
+        const musicYes = document.getElementById("music-yes");
+        const musicNo = document.getElementById("music-no");
+        const backgroundMusic = document.getElementById("background-music");
+        const audioControl = document.getElementById("audio-control");
+        const audioVolume = document.getElementById("audio-volume");
+        const audioInfo = document.getElementById("audio-info");
 
         function closeMusicScreen() {
-
             musicStartScreen.classList.add("hidden");
-
             setTimeout(() => {
-
                 musicStartScreen.style.display = "none";
-
             }, 500);
+        }
 
+        function updateVolumeState() {
+            const volume = Number(audioVolume.value);
+            backgroundMusic.volume = volume / 100;
+            audioVolume.style.setProperty("--volume", `${volume}%`);
+
+            if (volume === 0) {
+                audioControl.classList.add("muted");
+                audioInfo.classList.remove("visible");
+            } else {
+                audioControl.classList.remove("muted");
+                audioInfo.classList.add("visible");
+            }
         }
 
         musicYes.addEventListener("click", async () => {
-
-            backgroundMusic.volume =
-                Number(audioVolume.value) / 100;
-
+            updateVolumeState();
             try {
-
                 await backgroundMusic.play();
-
             } catch (error) {
-
-                console.error(
-                    "Nie udało się uruchomić muzyki:",
-                    error
-                );
-
+                console.error("Nie udało się uruchomić muzyki:", error);
             }
-
             closeMusicScreen();
-
         });
 
         musicNo.addEventListener("click", () => {
-
             backgroundMusic.pause();
-
             backgroundMusic.currentTime = 0;
-
+            audioVolume.value = 0;
+            updateVolumeState();
             closeMusicScreen();
-
         });
 
-        audioVolume.addEventListener("input", () => {
+        audioVolume.addEventListener("input", updateVolumeState);
 
-            const volume =
-                Number(audioVolume.value);
+        // Stan początkowy
+        updateVolumeState();
 
-            backgroundMusic.volume =
-                volume / 100;
-
-            audioVolume.style.setProperty(
-                "--volume",
-                `${volume}%`
-            );
-
-            if (volume <= 0) {
-
-                audioInfo.classList.remove("visible");
-
-            } else {
-
-                audioInfo.classList.add("visible");
-
-            }
-
-        });
-
-        audioVolume.style.setProperty("--volume", "50%");
-
-
-        const typingText =
-            document.getElementById("typing-text");
-
+        // Pisanie tekstu
+        const typingText = document.getElementById("typing-text");
         const text = "Kituś 🩶";
-
         let typingIndex = 0;
         let deleting = false;
 
         function typingAnimation() {
-
-            if (!typingText) {
-                return;
-            }
+            if (!typingText) return;
 
             if (!deleting) {
-
                 if (typingIndex < text.length) {
-
-                    typingText.textContent =
-                        text.substring(
-                            0,
-                            typingIndex + 1
-                        );
-
+                    typingText.textContent = text.substring(0, typingIndex + 1);
                     typingIndex++;
-
-                    setTimeout(
-                        typingAnimation,
-                        110
-                    );
-
+                    setTimeout(typingAnimation, 110);
                 } else {
-
                     deleting = true;
-
-                    setTimeout(
-                        typingAnimation,
-                        1500
-                    );
-
+                    setTimeout(typingAnimation, 1500);
                 }
-
             } else {
-
                 if (typingIndex > 0) {
-
                     typingIndex--;
-
-                    typingText.textContent =
-                        text.substring(
-                            0,
-                            typingIndex
-                        );
-
-                    setTimeout(
-                        typingAnimation,
-                        70
-                    );
-
+                    typingText.textContent = text.substring(0, typingIndex);
+                    setTimeout(typingAnimation, 70);
                 } else {
-
                     deleting = false;
-
-                    setTimeout(
-                        typingAnimation,
-                        700
-                    );
-
+                    setTimeout(typingAnimation, 700);
                 }
-
             }
-
         }
-
         typingAnimation();
 
-
-        const visitorCount =
-            document.getElementById("visitor-count");
-
-        const counterUrl =
-            "https://api.counterapi.dev/v2/kitsun3kage-portfolio/kitu-portfolio-2026/up";
+        // Licznik
+        const visitorCount = document.getElementById("visitor-count");
+        const counterUrl = "https://api.counterapi.dev/v2/kitsun3kage-portfolio/kitu-portfolio-2026/up";
 
         async function updateVisitorCount() {
-
-            if (!visitorCount) {
-                return;
-            }
-
+            if (!visitorCount) return;
             try {
-
-                const response =
-                    await fetch(counterUrl);
-
-                if (!response.ok) {
-                    throw new Error(
-                        "Counter request failed"
-                    );
-                }
-
-                const data =
-                    await response.json();
-
-                if (
-                    data &&
-                    data.data &&
-                    data.data.up_count !== undefined
-                ) {
-
-                    visitorCount.textContent =
-                        data.data.up_count.toLocaleString(
-                            "pl-PL"
-                        );
-
+                const response = await fetch(counterUrl);
+                if (!response.ok) throw new Error("Counter request failed");
+                const data = await response.json();
+                if (data && data.data && data.data.up_count !== undefined) {
+                    visitorCount.textContent = data.data.up_count.toLocaleString("pl-PL");
                 } else {
-
                     visitorCount.textContent = "0";
-
                 }
-
             } catch (error) {
-
-                console.error(
-                    "Nie udało się pobrać licznika odwiedzin:",
-                    error
-                );
-
+                console.error("Nie udało się pobrać licznika odwiedzin:", error);
                 visitorCount.textContent = "0";
-
             }
-
         }
-
         updateVisitorCount();
 
+        // Efekt Tilt
+        const tiltBox = document.querySelector(".profile-box");
+        const desktopPointer = window.matchMedia("(hover: hover) and (pointer: fine)");
 
-        const tiltBox =
-            document.querySelector(
-                ".profile-box"
-            );
+        if (tiltBox && desktopPointer.matches) {
+            tiltBox.addEventListener("mousemove", (event) => {
+                const rect = tiltBox.getBoundingClientRect();
+                const x = event.clientX - rect.left;
+                const y = event.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateY = ((x - centerX) / centerX) * -6;
+                const rotateX = ((centerY - y) / centerY) * -6;
 
-        const desktopPointer =
-            window.matchMedia(
-                "(hover: hover) and (pointer: fine)"
-            );
+                tiltBox.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            });
 
-        if (
-            tiltBox &&
-            desktopPointer.matches
-        ) {
-
-            tiltBox.addEventListener(
-                "mousemove",
-                (event) => {
-
-                    const rect =
-                        tiltBox.getBoundingClientRect();
-
-                    const x =
-                        event.clientX -
-                        rect.left;
-
-                    const y =
-                        event.clientY -
-                        rect.top;
-
-                    const centerX =
-                        rect.width / 2;
-
-                    const centerY =
-                        rect.height / 2;
-
-                    const rotateY =
-                        (
-                            (x - centerX) /
-                            centerX
-                        ) * -6;
-
-                    const rotateX =
-                        (
-                            (centerY - y) /
-                            centerY
-                        ) * -6;
-
-                    tiltBox.style.transform = `
-                        perspective(1000px)
-                        rotateX(${rotateX}deg)
-                        rotateY(${rotateY}deg)
-                    `;
-
-                }
-            );
-
-            tiltBox.addEventListener(
-                "mouseleave",
-                () => {
-
-                    tiltBox.style.transform = `
-                        perspective(1000px)
-                        rotateX(0deg)
-                        rotateY(0deg)
-                    `;
-
-                }
-            );
-
+            tiltBox.addEventListener("mouseleave", () => {
+                tiltBox.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg)`;
+            });
         }
-
     </script>
-
 </body>
 </html>
