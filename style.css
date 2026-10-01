@@ -97,7 +97,7 @@ body::after {
     transform: perspective(1000px) rotateX(0deg) rotateY(0deg);
     transform-style: preserve-3d;
     will-change: transform;
-    transition: transform 0.08s ease-out; /* Płynne, delikatne trzęsienie */
+    transition: transform 0.08s ease-out;
 }
 
 .profile {
@@ -390,6 +390,15 @@ footer p {
     justify-content: center;
     color: #fff;
     font-size: 18px;
+    overflow: hidden; /* Dodane dla przycięcia rogów obrazka */
+}
+
+/* Dodane ostylowanie obrazka okładki */
+.audio-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
 }
 
 .audio-text {
