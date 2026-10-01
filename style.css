@@ -96,7 +96,8 @@ body::after {
     padding: 30px;
     transform: perspective(1000px) rotateX(0deg) rotateY(0deg);
     transform-style: preserve-3d;
-    transition: transform 0.15s ease-out;
+    will-change: transform;
+    transition: transform 0.05s linear;
 }
 
 .profile {
