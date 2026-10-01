@@ -97,7 +97,7 @@ body::after {
     transform: perspective(1000px) rotateX(0deg) rotateY(0deg);
     transform-style: preserve-3d;
     will-change: transform;
-    transition: transform 0.05s linear;
+    transition: transform 0.08s ease-out; /* Płynne, delikatne trzęsienie */
 }
 
 .profile {
@@ -323,7 +323,6 @@ footer p {
     transition: width 0.35s cubic-bezier(0.22, 1, 0.36, 1), height 0.35s ease, border-radius 0.35s ease, background 0.25s ease;
 }
 
-/* Gdy głośność > 0 (rozwinięty pełny odtwarzacz) */
 .audio-control:not(.muted) {
     width: 330px;
     height: 74px;
@@ -331,7 +330,6 @@ footer p {
     background: rgba(10, 10, 10, 0.82);
 }
 
-/* Po najechaniu myszką gdy wyciszone (głośność 0) -> mniejsza szerokość, suwak obok nutki */
 .audio-control.muted:hover {
     width: 180px;
     height: 74px;
@@ -374,7 +372,6 @@ footer p {
     transition: width 0.35s ease, opacity 0.25s ease, margin 0.35s ease;
 }
 
-/* Pokazuj info o piosence TYLKO gdy głośność > 0 */
 .audio-control:not(.muted) .audio-info {
     width: 155px;
     opacity: 1;
