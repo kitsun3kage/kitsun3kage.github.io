@@ -26,8 +26,8 @@
         <source src="music.mp3" type="audio/mpeg">
     </audio>
 
-    <!-- Odtwarzacz umieszczony w prawym dolnym rogu -->
-    <div class="audio-control bottom-right" id="audio-control">
+    <!-- Odtwarzacz w PRAWYM DOLNYM ROGU -->
+    <div class="audio-control" id="audio-control" style="position: fixed; bottom: 20px; right: 20px; left: auto; top: auto; z-index: 100;">
         <div class="audio-control-inner">
             <div class="audio-icon">
                 <span class="audio-note">♪</span>
@@ -118,6 +118,7 @@
         const audioVolume = document.getElementById("audio-volume");
         const profileBox = document.getElementById("profile-box");
 
+        // Płynna animacja zamykania ekranu startowego
         function closeMusicScreen() {
             musicStartScreen.classList.add("hidden");
             setTimeout(() => {
@@ -137,7 +138,7 @@
             }
         }
 
-        // --- BARDZO PŁYNNY BASS SHAKE Z ZWIĘKSZONĄ AMPLITUDĄ ---
+        // --- PŁYNNY BASS SHAKE Z PRÓGIEM REAKCJI ---
         let audioCtx, analyser, dataArray, sourceNode;
         let isAudioSetup = false;
         let currentTiltX = 0, currentTiltY = 0;
@@ -187,7 +188,8 @@
                 const nyquist = sampleRate / 2;
                 const binCount = analyser.frequencyBinCount; 
 
-                let startBin = Math.floor((20 / nyquist) * binCount);
+                // Pasmo niskiego basu: 30Hz - 130Hz
+                let startBin = Math.floor((30 / nyquist) * binCount);
                 let endBin = Math.ceil((130 / nyquist) * binCount);
 
                 startBin = Math.max(0, startBin);
@@ -203,23 +205,24 @@
                 const outputMultiplier = 56;
                 let bassValue = rawBass * outputMultiplier;
 
-                const threshold = 1.2;
+                // Podwyższony próg (8.0) - trzęsie TYLKO podczas mocnego basu
+                const threshold = 8.0;
 
                 if (bassValue > threshold) {
                     const intensity = Math.min((bassValue - threshold) / (outputMultiplier - threshold), 1.0);
 
-                    // Mocniejsza amplituda X i Y z wygładzaniem
-                    targetShakeX = (Math.random() - 0.5) * intensity * 20;
-                    targetShakeY = (Math.random() - 0.5) * intensity * 20;
+                    targetShakeX = (Math.random() - 0.5) * intensity * 22;
+                    targetShakeY = (Math.random() - 0.5) * intensity * 22;
                     targetScale = 1 + (intensity * 0.025);
                 } else {
+                    // Brak basu = brak jakiegokolwiek trzęsienia
                     targetShakeX = 0;
                     targetShakeY = 0;
                     targetScale = 1;
                 }
             }
 
-            // Płynna interpolacja pozycji
+            // Płynne wracanie i trzęsienie (lerp)
             currentShakeX = lerp(currentShakeX, targetShakeX, 0.18);
             currentShakeY = lerp(currentShakeY, targetShakeY, 0.18);
             currentScale = lerp(currentScale, targetScale, 0.15);
@@ -246,6 +249,14 @@
             backgroundMusic.currentTime = 0;
             audioVolume.value = 0;
             updateVolumeState();
+            
+            // Ukrycie odtwarzacza po kliknięciu "Nie"
+            audioControl.style.opacity = "0";
+            audioControl.style.transition = "opacity 0.4s ease";
+            setTimeout(() => {
+                audioControl.style.display = "none";
+            }, 400);
+
             closeMusicScreen();
         });
 
