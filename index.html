@@ -12,6 +12,89 @@
 
 <body>
 
+    <div class="music-start-screen" id="music-start-screen">
+
+        <div class="music-start-content">
+
+            <h2>Czy chcesz włączyć muzykę?</h2>
+
+            <div class="music-start-buttons">
+
+                <button
+                    type="button"
+                    class="music-start-button"
+                    id="music-yes"
+                >
+                    Tak
+                </button>
+
+                <button
+                    type="button"
+                    class="music-start-button secondary"
+                    id="music-no"
+                >
+                    Nie
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <audio
+        id="background-music"
+        loop
+        preload="auto"
+    >
+        <source src="music.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="audio-control" id="audio-control">
+
+        <div class="audio-control-inner">
+
+            <div class="audio-icon">
+                <span class="audio-note">♪</span>
+            </div>
+
+            <div class="audio-info" id="audio-info">
+
+                <div class="audio-cover">
+                    <span>♪</span>
+                </div>
+
+                <div class="audio-text">
+
+                    <span class="audio-artist">
+                        Kitsun3 Kage
+                    </span>
+
+                    <span class="audio-title">
+                        Peaceful Music
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div class="audio-slider-wrapper">
+
+                <input
+                    type="range"
+                    id="audio-volume"
+                    min="0"
+                    max="100"
+                    value="50"
+                    aria-label="Głośność muzyki"
+                >
+
+            </div>
+
+        </div>
+
+    </div>
+
     <main class="page">
 
         <section class="box profile-box" id="profile-box">
@@ -159,9 +242,98 @@
 
     <script>
 
-        /* =========================================
-           TYPING EFFECT
-        ========================================= */
+        const musicStartScreen =
+            document.getElementById("music-start-screen");
+
+        const musicYes =
+            document.getElementById("music-yes");
+
+        const musicNo =
+            document.getElementById("music-no");
+
+        const backgroundMusic =
+            document.getElementById("background-music");
+
+        const audioControl =
+            document.getElementById("audio-control");
+
+        const audioVolume =
+            document.getElementById("audio-volume");
+
+        const audioInfo =
+            document.getElementById("audio-info");
+
+        function closeMusicScreen() {
+
+            musicStartScreen.classList.add("hidden");
+
+            setTimeout(() => {
+
+                musicStartScreen.style.display = "none";
+
+            }, 500);
+
+        }
+
+        musicYes.addEventListener("click", async () => {
+
+            backgroundMusic.volume =
+                Number(audioVolume.value) / 100;
+
+            try {
+
+                await backgroundMusic.play();
+
+            } catch (error) {
+
+                console.error(
+                    "Nie udało się uruchomić muzyki:",
+                    error
+                );
+
+            }
+
+            closeMusicScreen();
+
+        });
+
+        musicNo.addEventListener("click", () => {
+
+            backgroundMusic.pause();
+
+            backgroundMusic.currentTime = 0;
+
+            closeMusicScreen();
+
+        });
+
+        audioVolume.addEventListener("input", () => {
+
+            const volume =
+                Number(audioVolume.value);
+
+            backgroundMusic.volume =
+                volume / 100;
+
+            audioVolume.style.setProperty(
+                "--volume",
+                `${volume}%`
+            );
+
+            if (volume <= 0) {
+
+                audioInfo.classList.remove("visible");
+
+            } else {
+
+                audioInfo.classList.add("visible");
+
+            }
+
+        });
+
+        audioVolume.style.setProperty("--volume", "50%");
+
 
         const typingText =
             document.getElementById("typing-text");
@@ -240,10 +412,6 @@
         typingAnimation();
 
 
-        /* =========================================
-           VISITOR COUNTER
-        ========================================= */
-
         const visitorCount =
             document.getElementById("visitor-count");
 
@@ -302,10 +470,6 @@
 
         updateVisitorCount();
 
-
-        /* =========================================
-           3D MOUSE TILT
-        ========================================= */
 
         const tiltBox =
             document.querySelector(
