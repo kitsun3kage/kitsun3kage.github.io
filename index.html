@@ -22,7 +22,7 @@
         </div>
     </div>
 
-    <audio id="background-music" loop preload="auto">
+    <audio id="background-music" loop preload="auto" crossorigin="anonymous">
         <source src="music.mp3" type="audio/mpeg">
     </audio>
 
@@ -116,6 +116,7 @@
         const audioControl = document.getElementById("audio-control");
         const audioVolume = document.getElementById("audio-volume");
         const audioInfo = document.getElementById("audio-info");
+        const profileBox = document.getElementById("profile-box");
 
         function closeMusicScreen() {
             musicStartScreen.classList.add("hidden");
@@ -138,10 +139,77 @@
             }
         }
 
+        // --- WEB AUDIO API: BASS SHAKE EFFECT ---
+        let audioCtx, analyser, dataArray, sourceNode;
+        let isAudioSetup = false;
+        let currentTiltX = 0, currentTiltY = 0; // Zapamiętanie pozycji tiltu z myszki
+
+        function initAudioAnalyser() {
+            if (isAudioSetup) return;
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                audioCtx = new AudioContext();
+                analyser = audioCtx.createAnalyser();
+                analyser.fftSize = 256;
+
+                sourceNode = audioCtx.createMediaElementSource(backgroundMusic);
+                sourceNode.connect(analyser);
+                analyser.connect(audioCtx.destination);
+
+                dataArray = new Uint8Array(analyser.frequencyBinCount);
+                isAudioSetup = true;
+
+                renderBassShake();
+            } catch (e) {
+                console.warn("Nie można uruchomić analizatora AudioContext:", e);
+            }
+        }
+
+        function renderBassShake() {
+            requestAnimationFrame(renderBassShake);
+
+            if (!analyser || backgroundMusic.paused || backgroundMusic.volume === 0) {
+                // Brak trzęsienia gdy muzyka nie gra / wyciszona
+                profileBox.style.transform = `perspective(1000px) rotateX(${currentTiltX}deg) rotateY(${currentTiltY}deg) translate(0px, 0px) scale(1)`;
+                return;
+            }
+
+            analyser.getByteFrequencyData(dataArray);
+
+            // Pobieramy niske częstotliwości (bas - pierwsze kilka indeksów z FFT)
+            let bassSum = 0;
+            const bassBins = 6; 
+            for (let i = 0; i < bassBins; i++) {
+                bassSum += dataArray[i];
+            }
+            let bassAverage = bassSum / bassBins; // Wartość 0 - 255
+
+            // Próg aktywacji basu (możesz dostosować, np. 140)
+            const threshold = 130; 
+            if (bassAverage > threshold) {
+                const intensity = (bassAverage - threshold) / (255 - threshold); // 0.0 do 1.0
+
+                // Wartości trzęsienia
+                const maxShake = 7 * intensity; // Moc przesunięcia w px
+                const shakeX = (Math.random() - 0.5) * maxShake * 2;
+                const shakeY = (Math.random() - 0.5) * maxShake * 2;
+                const rotate = (Math.random() - 0.5) * intensity * 2; // Delikatna rotacja w deg
+                const scale = 1 + (intensity * 0.025); // Lekki bity puls karty
+
+                profileBox.style.transform = `perspective(1000px) rotateX(${currentTiltX}deg) rotateY(${currentTiltY}deg) translate(${shakeX}px, ${shakeY}px) rotate(${rotate}deg) scale(${scale})`;
+            } else {
+                profileBox.style.transform = `perspective(1000px) rotateX(${currentTiltX}deg) rotateY(${currentTiltY}deg) translate(0px, 0px) scale(1)`;
+            }
+        }
+
         musicYes.addEventListener("click", async () => {
             updateVolumeState();
             try {
                 await backgroundMusic.play();
+                initAudioAnalyser();
+                if (audioCtx && audioCtx.state === "suspended") {
+                    await audioCtx.resume();
+                }
             } catch (error) {
                 console.error("Nie udało się uruchomić muzyki:", error);
             }
@@ -214,25 +282,23 @@
         }
         updateVisitorCount();
 
-        // Efekt Tilt
-        const tiltBox = document.querySelector(".profile-box");
+        // Efekt Tilt polączony z Shake
         const desktopPointer = window.matchMedia("(hover: hover) and (pointer: fine)");
 
-        if (tiltBox && desktopPointer.matches) {
-            tiltBox.addEventListener("mousemove", (event) => {
-                const rect = tiltBox.getBoundingClientRect();
+        if (profileBox && desktopPointer.matches) {
+            profileBox.addEventListener("mousemove", (event) => {
+                const rect = profileBox.getBoundingClientRect();
                 const x = event.clientX - rect.left;
                 const y = event.clientY - rect.top;
                 const centerX = rect.width / 2;
                 const centerY = rect.height / 2;
-                const rotateY = ((x - centerX) / centerX) * -6;
-                const rotateX = ((centerY - y) / centerY) * -6;
-
-                tiltBox.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+                currentTiltY = ((x - centerX) / centerX) * -6;
+                currentTiltX = ((centerY - y) / centerY) * -6;
             });
 
-            tiltBox.addEventListener("mouseleave", () => {
-                tiltBox.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg)`;
+            profileBox.addEventListener("mouseleave", () => {
+                currentTiltX = 0;
+                currentTiltY = 0;
             });
         }
     </script>
