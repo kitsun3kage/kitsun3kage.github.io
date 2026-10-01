@@ -35,11 +35,11 @@
 
             <div class="audio-info" id="audio-info">
                 <div class="audio-cover">
-                    <span>♪</span>
+                    <img src="okladka.jpg" alt="Okładka">
                 </div>
                 <div class="audio-text">
-                    <span class="audio-artist">Kitsun3 Kage</span>
-                    <span class="audio-title">Peaceful Music</span>
+                    <span class="audio-artist">Filipek, Inee, Zegar</span>
+                    <span class="audio-title">Niebezpiecznie</span>
                 </div>
             </div>
 
@@ -138,10 +138,11 @@
             }
         }
 
-        // --- PŁYNNY BASS SHAKE Z PRÓGIEM REAKCJI ---
+        // --- PŁYNNY BASS SHAKE & TILT 3D LOOP ---
         let audioCtx, analyser, dataArray, sourceNode;
         let isAudioSetup = false;
-        let currentTiltX = 0, currentTiltY = 0;
+        let targetTiltX = 0, currentTiltX = 0;
+        let targetTiltY = 0, currentTiltY = 0;
 
         let targetShakeX = 0, currentShakeX = 0;
         let targetShakeY = 0, currentShakeY = 0;
@@ -163,8 +164,6 @@
 
                 dataArray = new Uint8Array(analyser.frequencyBinCount);
                 isAudioSetup = true;
-
-                renderBassShake();
             } catch (e) {
                 console.warn("Nie można uruchomić analizatora AudioContext:", e);
             }
@@ -174,9 +173,10 @@
             return (1 - amt) * start + amt * end;
         }
 
-        function renderBassShake() {
-            requestAnimationFrame(renderBassShake);
+        function renderLoop() {
+            requestAnimationFrame(renderLoop);
 
+            // Obliczanie basu tylko gdy muzyka gra i nie jest wyciszona
             if (!analyser || backgroundMusic.paused || backgroundMusic.volume === 0) {
                 targetShakeX = 0;
                 targetShakeY = 0;
@@ -205,7 +205,7 @@
                 const outputMultiplier = 56;
                 let bassValue = rawBass * outputMultiplier;
 
-                // Podwyższony próg (8.0) - trzęsie TYLKO podczas mocnego basu
+                // Próg (8.0) - trzęsie TYLKO przy mocniejszym basie
                 const threshold = 8.0;
 
                 if (bassValue > threshold) {
@@ -215,20 +215,26 @@
                     targetShakeY = (Math.random() - 0.5) * intensity * 22;
                     targetScale = 1 + (intensity * 0.025);
                 } else {
-                    // Brak basu = brak jakiegokolwiek trzęsienia
                     targetShakeX = 0;
                     targetShakeY = 0;
                     targetScale = 1;
                 }
             }
 
-            // Płynne wracanie i trzęsienie (lerp)
+            // Płynne przejścia (LERP) dla Tilt 3D oraz drgań basu
+            currentTiltX = lerp(currentTiltX, targetTiltX, 0.12);
+            currentTiltY = lerp(currentTiltY, targetTiltY, 0.12);
             currentShakeX = lerp(currentShakeX, targetShakeX, 0.18);
             currentShakeY = lerp(currentShakeY, targetShakeY, 0.18);
             currentScale = lerp(currentScale, targetScale, 0.15);
 
-            profileBox.style.transform = `perspective(1000px) rotateX(${currentTiltX}deg) rotateY(${currentTiltY}deg) translate(${currentShakeX.toFixed(2)}px, ${currentShakeY.toFixed(2)}px) scale(${currentScale.toFixed(4)})`;
+            if (profileBox) {
+                profileBox.style.transform = `perspective(1000px) rotateX(${currentTiltX.toFixed(2)}deg) rotateY(${currentTiltY.toFixed(2)}deg) translate(${currentShakeX.toFixed(2)}px, ${currentShakeY.toFixed(2)}px) scale(${currentScale.toFixed(4)})`;
+            }
         }
+
+        // Uruchomienie pętli natychmiast, aby Tilt 3D działał nawet przy wybranej opcji "Nie"
+        renderLoop();
 
         musicYes.addEventListener("click", async () => {
             updateVolumeState();
@@ -316,7 +322,7 @@
         }
         updateVisitorCount();
 
-        // Tilt 3D
+        // Obsługa Tilt 3D myszką (działa ZAWSZE, niezależnie od muzyki)
         const desktopPointer = window.matchMedia("(hover: hover) and (pointer: fine)");
 
         if (profileBox && desktopPointer.matches) {
@@ -326,13 +332,13 @@
                 const y = event.clientY - rect.top;
                 const centerX = rect.width / 2;
                 const centerY = rect.height / 2;
-                currentTiltY = ((x - centerX) / centerX) * -6;
-                currentTiltX = ((centerY - y) / centerY) * -6;
+                targetTiltY = ((x - centerX) / centerX) * -6;
+                targetTiltX = ((centerY - y) / centerY) * -6;
             });
 
             profileBox.addEventListener("mouseleave", () => {
-                currentTiltX = 0;
-                currentTiltY = 0;
+                targetTiltX = 0;
+                targetTiltY = 0;
             });
         }
     </script>
