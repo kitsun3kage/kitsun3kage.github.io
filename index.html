@@ -186,7 +186,7 @@
 
                 const sampleRate = audioCtx.sampleRate || 44100;
                 const nyquist = sampleRate / 2;
-                const binCount = analyser.frequencyBinCount; 
+                let binCount = analyser.frequencyBinCount; 
 
                 // Pasmo niskiego basu: 30Hz - 130Hz
                 let startBin = Math.floor((30 / nyquist) * binCount);
@@ -243,6 +243,18 @@
                 initAudioAnalyser();
                 if (audioCtx && audioCtx.state === "suspended") {
                     await audioCtx.resume();
+                }
+
+                // --- Media Session API (pokazywanie utworu w systemie) ---
+                if ('mediaSession' in navigator) {
+                    navigator.mediaSession.metadata = new MediaMetadata({
+                        title: 'Niebezpiecznie',
+                        artist: 'Filipek, Inee, Zegar',
+                        album: 'Kituś 🩶',
+                        artwork: [
+                            { src: 'okladka.jpg', sizes: '512x512', type: 'image/jpeg' }
+                        ]
+                    });
                 }
             } catch (error) {
                 console.error("Nie udało się uruchomić muzyki:", error);
