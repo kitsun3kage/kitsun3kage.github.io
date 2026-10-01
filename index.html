@@ -115,7 +115,6 @@
         const backgroundMusic = document.getElementById("background-music");
         const audioControl = document.getElementById("audio-control");
         const audioVolume = document.getElementById("audio-volume");
-        const audioInfo = document.getElementById("audio-info");
         const profileBox = document.getElementById("profile-box");
 
         function closeMusicScreen() {
@@ -132,17 +131,20 @@
 
             if (volume === 0) {
                 audioControl.classList.add("muted");
-                audioInfo.classList.remove("visible");
             } else {
                 audioControl.classList.remove("muted");
-                audioInfo.classList.add("visible");
             }
         }
 
-        // --- WEB AUDIO API: BASS SHAKE EFFECT ---
+        // --- BARDZO PŁYNNY BASS SHAKE (LERP / SMOOTHING) ---
         let audioCtx, analyser, dataArray, sourceNode;
         let isAudioSetup = false;
-        let currentTiltX = 0, currentTiltY = 0; // Zapamiętanie pozycji tiltu z myszki
+        let currentTiltX = 0, currentTiltY = 0;
+
+        // Zmienne interpolacji pozycji trzęsienia
+        let targetShakeX = 0, currentShakeX = 0;
+        let targetShakeY = 0, currentShakeY = 0;
+        let targetScale = 1, currentScale = 1;
 
         function initAudioAnalyser() {
             if (isAudioSetup) return;
@@ -150,7 +152,10 @@
                 const AudioContext = window.AudioContext || window.webkitAudioContext;
                 audioCtx = new AudioContext();
                 analyser = audioCtx.createAnalyser();
-                analyser.fftSize = 256;
+                
+                // Samples out = 128 -> fftSize = 256
+                analyser.fftSize = 256; 
+                analyser.smoothingTimeConstant = 0; // Natychmiastowy odczyt surowego basu
 
                 sourceNode = audioCtx.createMediaElementSource(backgroundMusic);
                 sourceNode.connect(analyser);
@@ -165,41 +170,64 @@
             }
         }
 
+        function lerp(start, end, amt) {
+            return (1 - amt) * start + amt * end;
+        }
+
         function renderBassShake() {
             requestAnimationFrame(renderBassShake);
 
             if (!analyser || backgroundMusic.paused || backgroundMusic.volume === 0) {
-                // Brak trzęsienia gdy muzyka nie gra / wyciszona
-                profileBox.style.transform = `perspective(1000px) rotateX(${currentTiltX}deg) rotateY(${currentTiltY}deg) translate(0px, 0px) scale(1)`;
-                return;
-            }
-
-            analyser.getByteFrequencyData(dataArray);
-
-            // Pobieramy niske częstotliwości (bas - pierwsze kilka indeksów z FFT)
-            let bassSum = 0;
-            const bassBins = 6; 
-            for (let i = 0; i < bassBins; i++) {
-                bassSum += dataArray[i];
-            }
-            let bassAverage = bassSum / bassBins; // Wartość 0 - 255
-
-            // Próg aktywacji basu (możesz dostosować, np. 140)
-            const threshold = 130; 
-            if (bassAverage > threshold) {
-                const intensity = (bassAverage - threshold) / (255 - threshold); // 0.0 do 1.0
-
-                // Wartości trzęsienia
-                const maxShake = 7 * intensity; // Moc przesunięcia w px
-                const shakeX = (Math.random() - 0.5) * maxShake * 2;
-                const shakeY = (Math.random() - 0.5) * maxShake * 2;
-                const rotate = (Math.random() - 0.5) * intensity * 2; // Delikatna rotacja w deg
-                const scale = 1 + (intensity * 0.025); // Lekki bity puls karty
-
-                profileBox.style.transform = `perspective(1000px) rotateX(${currentTiltX}deg) rotateY(${currentTiltY}deg) translate(${shakeX}px, ${shakeY}px) rotate(${rotate}deg) scale(${scale})`;
+                targetShakeX = 0;
+                targetShakeY = 0;
+                targetScale = 1;
             } else {
-                profileBox.style.transform = `perspective(1000px) rotateX(${currentTiltX}deg) rotateY(${currentTiltY}deg) translate(0px, 0px) scale(1)`;
+                analyser.getByteFrequencyData(dataArray);
+
+                // Zakres częstotliwości: 20Hz - 130Hz
+                const sampleRate = audioCtx.sampleRate || 44100;
+                const nyquist = sampleRate / 2;
+                const binCount = analyser.frequencyBinCount; // 128
+
+                let startBin = Math.floor((20 / nyquist) * binCount);
+                let endBin = Math.ceil((130 / nyquist) * binCount);
+
+                startBin = Math.max(0, startBin);
+                endBin = Math.min(binCount - 1, Math.max(startBin + 1, endBin));
+
+                let bassSum = 0;
+                for (let i = startBin; i <= endBin; i++) {
+                    bassSum += dataArray[i];
+                }
+                let count = (endBin - startBin + 1);
+                let rawBass = (bassSum / count) / 255;
+
+                // Output multiplier = 56
+                const outputMultiplier = 56;
+                let bassValue = rawBass * outputMultiplier;
+
+                const threshold = 1.2;
+
+                if (bassValue > threshold) {
+                    const intensity = Math.min((bassValue - threshold) / (outputMultiplier - threshold), 1.0);
+
+                    // Amplituda docelowa
+                    targetShakeX = (Math.random() - 0.5) * intensity * 6;
+                    targetShakeY = (Math.random() - 0.5) * intensity * 6;
+                    targetScale = 1 + (intensity * 0.009);
+                } else {
+                    targetShakeX = 0;
+                    targetShakeY = 0;
+                    targetScale = 1;
+                }
             }
+
+            // Płynna interpolacja (wygładzanie drgań)
+            currentShakeX = lerp(currentShakeX, targetShakeX, 0.25);
+            currentShakeY = lerp(currentShakeY, targetShakeY, 0.25);
+            currentScale = lerp(currentScale, targetScale, 0.2);
+
+            profileBox.style.transform = `perspective(1000px) rotateX(${currentTiltX}deg) rotateY(${currentTiltY}deg) translate(${currentShakeX.toFixed(2)}px, ${currentShakeY.toFixed(2)}px) scale(${currentScale.toFixed(4)})`;
         }
 
         musicYes.addEventListener("click", async () => {
@@ -225,11 +253,9 @@
         });
 
         audioVolume.addEventListener("input", updateVolumeState);
-
-        // Stan początkowy
         updateVolumeState();
 
-        // Pisanie tekstu
+        // Animacja wpisywania tekstu
         const typingText = document.getElementById("typing-text");
         const text = "Kituś 🩶";
         let typingIndex = 0;
@@ -260,7 +286,7 @@
         }
         typingAnimation();
 
-        // Licznik
+        // Licznik odwiedzin
         const visitorCount = document.getElementById("visitor-count");
         const counterUrl = "https://api.counterapi.dev/v2/kitsun3kage-portfolio/kitu-portfolio-2026/up";
 
@@ -282,7 +308,7 @@
         }
         updateVisitorCount();
 
-        // Efekt Tilt polączony z Shake
+        // Tilt 3D
         const desktopPointer = window.matchMedia("(hover: hover) and (pointer: fine)");
 
         if (profileBox && desktopPointer.matches) {
