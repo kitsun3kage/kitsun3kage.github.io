@@ -6,258 +6,150 @@
     font-display: swap;
 }
 
-
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
-
 html {
     width: 100%;
     min-height: 100%;
 }
 
-
 body {
     width: 100%;
     min-height: 100vh;
-
     overflow-x: hidden;
-
     background: #000;
-
     color: #fff;
-
     font-family: "Satoshi", Arial, sans-serif;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     position: relative;
-
     isolation: isolate;
 }
 
-
-/* =========================================
-   BACKGROUND VIDEO
-========================================= */
-
 #background-video {
     position: fixed;
-
     inset: 0;
-
     width: 100%;
     height: 100%;
-
     object-fit: cover;
-
     z-index: -3;
-
     pointer-events: none;
 }
 
-
-/* =========================================
-   DARK OVERLAY
-========================================= */
-
 body::before {
     content: "";
-
     position: fixed;
-
     inset: 0;
-
     background:
         linear-gradient(
             180deg,
             rgba(0, 0, 0, 0.22),
             rgba(0, 0, 0, 0.42)
         );
-
     z-index: -2;
-
     pointer-events: none;
 }
 
-
-/* =========================================
-   SUBTLE GLOW
-========================================= */
-
 body::after {
     content: "";
-
     position: fixed;
-
     inset: 0;
-
     background:
         radial-gradient(
             circle at 50% 40%,
             rgba(120, 100, 255, 0.08),
             transparent 45%
         );
-
     z-index: -1;
-
     pointer-events: none;
 }
 
-
-/* =========================================
-   PAGE
-========================================= */
-
 .page {
     width: 100%;
-
     min-height: 100vh;
-
     display: flex;
-
     flex-direction: column;
-
     align-items: center;
-
     justify-content: center;
-
     padding: 24px;
 }
 
-
-/* =========================================
-   BOX
-========================================= */
-
 .box {
     width: min(500px, 100%);
-
     position: relative;
-
     border: 1px solid rgba(255, 255, 255, 0.18);
-
     border-radius: 30px;
-
     background: transparent;
-
     backdrop-filter: blur(18px);
-
     -webkit-backdrop-filter: blur(18px);
-
     box-shadow:
         0 20px 60px rgba(0, 0, 0, 0.38),
         inset 0 1px 0 rgba(255, 255, 255, 0.06);
-
     overflow: hidden;
 }
 
-
-/* =========================================
-   PROFILE BOX
-========================================= */
-
 .profile-box {
     min-height: 220px;
-
     padding: 30px;
-
     transform:
         perspective(1000px)
         rotateX(0deg)
         rotateY(0deg);
-
     transform-style: preserve-3d;
-
     transition:
         transform 0.15s ease-out;
 }
 
-
-/* =========================================
-   PROFILE
-========================================= */
-
 .profile {
     display: flex;
-
     align-items: center;
-
     gap: 18px;
 }
 
-
 .logo {
     width: 76px;
-
     height: 76px;
-
     flex: 0 0 76px;
-
     object-fit: cover;
-
     border-radius: 50%;
-
     border: 1px solid rgba(255, 255, 255, 0.18);
-
     box-shadow:
         0 8px 30px rgba(0, 0, 0, 0.35);
 }
-
 
 .profile-text {
     min-width: 0;
 }
 
-
 .profile-text h1 {
     font-size: clamp(25px, 5vw, 34px);
-
     line-height: 1.1;
-
     font-weight: 700;
-
     letter-spacing: -0.8px;
-
     white-space: nowrap;
 }
 
-
 .profile-text p {
     margin-top: 7px;
-
     font-size: 15px;
-
     line-height: 1.2;
-
     color: rgba(255, 255, 255, 0.58);
-
     letter-spacing: 0.1px;
 }
 
-
-/* =========================================
-   TYPING CURSOR
-========================================= */
-
 .cursor {
     display: inline-block;
-
     margin-left: 2px;
-
     color: rgba(255, 255, 255, 0.8);
-
     animation: cursorBlink 0.9s infinite;
 }
 
-
 @keyframes cursorBlink {
-
     0%,
     45% {
         opacity: 1;
@@ -267,97 +159,45 @@ body::after {
     100% {
         opacity: 0;
     }
-
 }
-
-
-/* =========================================
-   SOCIALS
-========================================= */
 
 .socials {
     width: 100%;
-
     display: flex;
-
-    align-items: center;
-
     justify-content: center;
-
-    gap: 24px;
-
-    margin-top: 28px;
-}
-
-
-/* =========================
-   SOCIALS
-========================= */
-
-.socials {
-    width: 100%;
-
-    display: flex;
-
-    justify-content: center;
-
     align-items: center;
-
     gap: 14px;
-
     margin-top: 28px;
 }
-
-
-/* =========================
-   SOCIAL BUTTON
-========================= */
 
 .social-button {
     width: 45px;
     height: 45px;
-
     padding: 0;
-
     display: flex;
-
     justify-content: center;
-
     align-items: center;
-
     background: transparent;
-
     border: none;
-
     cursor: pointer;
 }
-
-
-/* =========================
-   SOCIAL ICON
-========================= */
 
 .social-button img {
     width: 45px;
     height: 45px;
-
     object-fit: contain;
-
     filter:
         drop-shadow(
             0 0 5px
             rgba(255, 255, 255, 0.65)
         );
-
     transition:
         transform 0.2s ease,
         filter 0.2s ease;
 }
 
-
 .social-button:hover img {
     transform: scale(1.1);
-
     filter:
         drop-shadow(
             0 0 9px
@@ -365,92 +205,303 @@ body::after {
         );
 }
 
-
-/* =========================================
-   SITE INFO
-========================================= */
-
 .site-info {
     width: 100%;
-    
     display: flex;
-
     align-items: center;
-
     justify-content: flex-start;
-
     gap: 12px;
-
     margin-top: 28px;
-
     color: rgba(255, 255, 255, 0.55);
-
     font-size: 13px;
 }
-
 
 .visitor-count,
 .location-info {
     display: flex;
-
     align-items: center;
-
     gap: 7px;
 }
-
 
 .visitor-count img,
 .location-info img {
     width: 15px;
-
     height: 15px;
-
     object-fit: contain;
-
     opacity: 0.65;
 }
-
 
 .info-separator {
     color: rgba(255, 255, 255, 0.22);
 }
 
-
-/* =========================================
-   FOOTER
-========================================= */
-
 footer {
     position: fixed;
-
     bottom: 18px;
-
     left: 0;
-
     width: 100%;
-
     display: flex;
-
     justify-content: center;
-
     pointer-events: none;
 }
 
-
 footer p {
     font-size: 11px;
-
     color: rgba(255, 255, 255, 0.35);
-
     letter-spacing: 0.1px;
-
     text-align: center;
 }
 
+.music-start-screen {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    opacity: 1;
+    visibility: visible;
+    transition:
+        opacity 0.5s ease,
+        visibility 0.5s ease;
+}
 
-/* =========================================
-   MOBILE
-========================================= */
+.music-start-screen.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.music-start-content {
+    width: min(420px, calc(100% - 40px));
+    text-align: center;
+}
+
+.music-start-content h2 {
+    font-size: clamp(23px, 5vw, 32px);
+    font-weight: 700;
+    letter-spacing: -0.7px;
+    color: #fff;
+    margin-bottom: 28px;
+}
+
+.music-start-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+
+.music-start-button {
+    min-width: 110px;
+    height: 46px;
+    padding: 0 24px;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 14px;
+    background: #fff;
+    color: #000;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.music-start-button:hover {
+    transform: translateY(-2px);
+    background: #f0f0f0;
+}
+
+.music-start-button.secondary {
+    background: rgba(255, 255, 255, 0.06);
+    color: #fff;
+    border-color: rgba(255, 255, 255, 0.18);
+}
+
+.music-start-button.secondary:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.audio-control {
+    position: fixed;
+    right: 22px;
+    bottom: 22px;
+    z-index: 5000;
+    height: 48px;
+    width: 48px;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 15px;
+    background: rgba(10, 10, 10, 0.62);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    box-shadow:
+        0 12px 35px rgba(0, 0, 0, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    overflow: hidden;
+    transition:
+        width 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+        height 0.35s ease,
+        border-radius 0.35s ease,
+        background 0.25s ease;
+}
+
+.audio-control:hover {
+    width: 330px;
+    height: 74px;
+    border-radius: 19px;
+    background: rgba(10, 10, 10, 0.78);
+}
+
+.audio-control-inner {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.audio-icon {
+    width: 48px;
+    min-width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.audio-note {
+    font-family: Arial, sans-serif;
+    font-size: 23px;
+    line-height: 1;
+    color: #fff;
+    text-shadow:
+        0 0 10px rgba(255, 255, 255, 0.35);
+}
+
+.audio-info {
+    width: 0;
+    min-width: 0;
+    opacity: 0;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition:
+        width 0.35s ease,
+        opacity 0.25s ease;
+}
+
+.audio-control:hover .audio-info.visible {
+    width: 155px;
+    opacity: 1;
+}
+
+.audio-cover {
+    width: 38px;
+    height: 38px;
+    flex: 0 0 38px;
+    border-radius: 10px;
+    background:
+        linear-gradient(
+            135deg,
+            #171717,
+            #303030
+        );
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 18px;
+}
+
+.audio-text {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.audio-artist,
+.audio-title {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.audio-artist {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.52);
+}
+
+.audio-title {
+    font-size: 13px;
+    color: #fff;
+}
+
+.audio-slider-wrapper {
+    width: 100px;
+    min-width: 100px;
+    margin-left: auto;
+    margin-right: 16px;
+    display: flex;
+    align-items: center;
+    opacity: 0;
+    transform: translateX(8px);
+    transition:
+        opacity 0.25s ease,
+        transform 0.3s ease;
+}
+
+.audio-control:hover .audio-slider-wrapper {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+#audio-volume {
+    width: 100%;
+    height: 4px;
+    appearance: none;
+    -webkit-appearance: none;
+    border-radius: 999px;
+    outline: none;
+    cursor: pointer;
+    background:
+        linear-gradient(
+            to right,
+            #fff 0%,
+            #fff var(--volume),
+            rgba(255, 255, 255, 0.2) var(--volume),
+            rgba(255, 255, 255, 0.2) 100%
+        );
+}
+
+#audio-volume::-webkit-slider-thumb {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: #fff;
+    border: none;
+    box-shadow:
+        0 0 8px rgba(255, 255, 255, 0.3);
+}
+
+#audio-volume::-moz-range-thumb {
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: #fff;
+    border: none;
+    box-shadow:
+        0 0 8px rgba(255, 255, 255, 0.3);
+}
 
 @media (max-width: 600px) {
 
@@ -458,139 +509,135 @@ footer p {
         padding: 18px;
     }
 
-
     .profile-box {
         padding: 24px;
-
         border-radius: 26px;
-
         min-height: 0;
     }
-
 
     .profile {
         gap: 14px;
     }
 
-
     .logo {
         width: 62px;
-
         height: 62px;
-
         flex-basis: 62px;
     }
 
-
     .profile-text h1 {
         font-size: 25px;
-
         letter-spacing: -0.5px;
     }
 
-
     .profile-text p {
         font-size: 14px;
-
         margin-top: 6px;
     }
 
-
     .socials {
         margin-top: 24px;
-
         gap: 22px;
     }
 
-
     .social-button {
         width: 32px;
-
         height: 32px;
     }
 
-
     .social-button img {
         width: 21px;
-
         height: 21px;
     }
 
-
     .site-info {
         margin-top: 24px;
-        
         gap: 10px;
-
         font-size: 12px;
     }
-
 
     footer {
         bottom: 12px;
     }
 
-
     footer p {
         font-size: 10px;
     }
 
+    .music-start-content {
+        width: calc(100% - 36px);
+    }
+
+    .music-start-content h2 {
+        font-size: 24px;
+        margin-bottom: 24px;
+    }
+
+    .music-start-buttons {
+        gap: 10px;
+    }
+
+    .music-start-button {
+        min-width: 100px;
+        height: 44px;
+    }
+
+    .audio-control {
+        right: 14px;
+        bottom: 14px;
+    }
+
+    .audio-control:hover {
+        width: calc(100vw - 28px);
+        max-width: 330px;
+    }
 }
-
-
-/* =========================================
-   SMALL PHONES
-========================================= */
 
 @media (max-width: 380px) {
 
     .profile-box {
         padding: 20px;
-
         border-radius: 23px;
     }
 
-
     .logo {
         width: 56px;
-
         height: 56px;
-
         flex-basis: 56px;
     }
-
 
     .profile-text h1 {
         font-size: 22px;
     }
 
-
     .profile-text p {
         font-size: 13px;
     }
-
 
     .socials {
         gap: 20px;
     }
 
-
     .social-button {
         width: 30px;
-
         height: 30px;
     }
 
-
     .social-button img {
         width: 20px;
-
         height: 20px;
     }
-
 
     .site-info {
         gap: 8px;
     }
 
+    .music-start-content h2 {
+        font-size: 22px;
+    }
+
+    .music-start-button {
+        min-width: 92px;
+        padding: 0 18px;
+    }
 }
