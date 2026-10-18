@@ -44,7 +44,7 @@
 
     <div class="music-start-screen" id="music-start-screen">
         <div class="music-start-content">
-            <h2>Czy chcesz włączyć muzykę?</h2>
+            <h2 id="music-question">Czy chcesz włączyć muzykę?</h2>
             <div class="music-start-buttons">
                 <button type="button" class="music-start-button" id="music-yes">Tak</button>
                 <button type="button" class="music-start-button secondary" id="music-no">Nie</button>
@@ -124,12 +124,12 @@
                 <span class="info-separator">|</span>
                 <div class="location-info">
                     <img src="location.svg" alt="">
-                    <span>Poland</span>
+                    <span id="country-text">Polska</span>
                 </div>
                 <span class="info-separator">|</span>
                 <div class="relationship-info" title="Status / Relationship status">
                     <span class="relationship-heart">💗</span>
-                    <span>W związku / In a relationship</span>
+                    <span id="relationship-text">W związku</span>
                 </div>
             </div>
         </section>
@@ -388,6 +388,174 @@
                 targetTiltY = 0;
             });
         }
+
+        // --- Automatyczne wykrywanie języka: status, kraj, ekran muzyki ---
+        const relationshipText = document.getElementById("relationship-text");
+        const countryText = document.getElementById("country-text");
+        const musicQuestion = document.getElementById("music-question");
+
+        const relationshipLabels = {
+            pl: "W związku",
+            en: "In a relationship",
+            de: "In einer Beziehung",
+            es: "En una relación",
+            fr: "En couple",
+            it: "Impegnato/a",
+            pt: "Em um relacionamento",
+            nl: "In een relatie",
+            cs: "Ve vztahu",
+            sk: "Vo vzťahu",
+            uk: "У стосунках",
+            ru: "В отношениях",
+            sv: "I ett förhållande",
+            no: "I et forhold",
+            da: "I et forhold",
+            fi: "Parisuhteessa",
+            lt: "Santykiai",
+            lv: "Attiecībās",
+            et: "Suhtes"
+        };
+
+        const countryLabels = {
+            pl: "Polska",
+            en: "Poland",
+            de: "Polen",
+            es: "Polonia",
+            fr: "Pologne",
+            it: "Polonia",
+            pt: "Polónia",
+            nl: "Polen",
+            cs: "Polsko",
+            sk: "Poľsko",
+            uk: "Польща",
+            ru: "Польша",
+            sv: "Polen",
+            no: "Polen",
+            da: "Polen",
+            fi: "Puola",
+            lt: "Lenkija",
+            lv: "Polija",
+            et: "Poola"
+        };
+
+        const musicQuestionLabels = {
+            pl: "Czy chcesz włączyć muzykę?",
+            en: "Do you want to turn on the music?",
+            de: "Möchtest du die Musik einschalten?",
+            es: "¿Quieres activar la música?",
+            fr: "Voulez-vous activer la musique ?",
+            it: "Vuoi attivare la musica?",
+            pt: "Quer ativar a música?",
+            nl: "Wil je de muziek aanzetten?",
+            cs: "Chceš zapnout hudbu?",
+            sk: "Chceš zapnúť hudbu?",
+            uk: "Бажаєте увімкнути музику?",
+            ru: "Хотите включить музыку?",
+            sv: "Vill du sätta på musiken?",
+            no: "Vil du slå på musikken?",
+            da: "Vil du tænde for musikken?",
+            fi: "Haluatko laittaa musiikin päälle?",
+            lt: "Ar norite įjungti muziką?",
+            lv: "Vai vēlaties ieslēgt mūziku?",
+            et: "Kas soovid muusika sisse lülitada?"
+        };
+
+        const yesLabels = {
+            pl: "Tak",
+            en: "Yes",
+            de: "Ja",
+            es: "Sí",
+            fr: "Oui",
+            it: "Sì",
+            pt: "Sim",
+            nl: "Ja",
+            cs: "Ano",
+            sk: "Áno",
+            uk: "Так",
+            ru: "Да",
+            sv: "Ja",
+            no: "Ja",
+            da: "Ja",
+            fi: "Kyllä",
+            lt: "Taip",
+            lv: "Jā",
+            et: "Jah"
+        };
+
+        const noLabels = {
+            pl: "Nie",
+            en: "No",
+            de: "Nein",
+            es: "No",
+            fr: "Non",
+            it: "No",
+            pt: "Não",
+            nl: "Nee",
+            cs: "Ne",
+            sk: "Nie",
+            uk: "Ні",
+            ru: "Нет",
+            sv: "Nej",
+            no: "Nei",
+            da: "Nej",
+            fi: "Ei",
+            lt: "Ne",
+            lv: "Nē",
+            et: "Ei"
+        };
+
+        const volumeLabels = {
+            pl: "Głośność muzyki",
+            en: "Music volume",
+            de: "Musiklautstärke",
+            es: "Volumen de la música",
+            fr: "Volume de la musique",
+            it: "Volume della musica",
+            pt: "Volume da música",
+            nl: "Muziekvolume",
+            cs: "Hlasitost hudby",
+            sk: "Hlasitosť hudby",
+            uk: "Гучність музики",
+            ru: "Громкость музыки",
+            sv: "Musikvolym",
+            no: "Musikkvolum",
+            da: "Musiklydstyrke",
+            fi: "Musiikin äänenvoimakkuus",
+            lt: "Muzikos garsumas",
+            lv: "Mūzikas skaļums",
+            et: "Muusika helitugevus"
+        };
+
+        function getBrowserLanguage() {
+            return (navigator.language || navigator.userLanguage || "en")
+                .toLowerCase()
+                .split("-")[0];
+        }
+
+        function applyLanguage() {
+            const lang = getBrowserLanguage();
+
+            if (relationshipText) {
+                relationshipText.textContent = relationshipLabels[lang] || relationshipLabels.en;
+            }
+            if (countryText) {
+                countryText.textContent = countryLabels[lang] || countryLabels.en;
+            }
+            if (musicQuestion) {
+                musicQuestion.textContent = musicQuestionLabels[lang] || musicQuestionLabels.en;
+            }
+            if (musicYes) {
+                musicYes.textContent = yesLabels[lang] || yesLabels.en;
+            }
+            if (musicNo) {
+                musicNo.textContent = noLabels[lang] || noLabels.en;
+            }
+            if (audioVolume) {
+                audioVolume.setAttribute("aria-label", volumeLabels[lang] || volumeLabels.en);
+            }
+        }
+
+        applyLanguage();
     </script>
 </body>
 </html>
