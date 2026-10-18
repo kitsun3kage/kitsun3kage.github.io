@@ -8,6 +8,36 @@
     <link rel="stylesheet" href="style.css">
 
     <title>Kituś 🩶</title>
+
+    <style>
+        .relationship-info {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.9em;
+            color: #ff9ecb;
+            font-weight: 600;
+        }
+
+        .relationship-heart {
+            font-size: 1em;
+            line-height: 1;
+            animation: heartPulse 1.6s infinite;
+            transform-origin: center;
+            display: inline-block;
+        }
+
+        @keyframes heartPulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.25);
+                opacity: 0.85;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -95,6 +125,11 @@
                 <div class="location-info">
                     <img src="location.svg" alt="">
                     <span>Poland</span>
+                </div>
+                <span class="info-separator">|</span>
+                <div class="relationship-info" title="Status / Relationship status">
+                    <span class="relationship-heart">💗</span>
+                    <span>W związku / In a relationship</span>
                 </div>
             </div>
         </section>
