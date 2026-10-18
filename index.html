@@ -42,50 +42,6 @@
 
 <body>
 
-    <div class="music-start-screen" id="music-start-screen">
-        <div class="music-start-content">
-            <h2 id="music-question">Czy chcesz włączyć muzykę?</h2>
-            <div class="music-start-buttons">
-                <button type="button" class="music-start-button" id="music-yes">Tak</button>
-                <button type="button" class="music-start-button secondary" id="music-no">Nie</button>
-            </div>
-        </div>
-    </div>
-
-    <audio id="background-music" loop preload="auto" crossorigin="anonymous">
-        <source src="music.mp3" type="audio/mpeg">
-    </audio>
-
-    <!-- Odtwarzacz w PRAWYM DOLNYM ROGU -->
-    <div class="audio-control" id="audio-control" style="position: fixed; bottom: 20px; right: 20px; left: auto; top: auto; z-index: 100;">
-        <div class="audio-control-inner">
-            <div class="audio-icon">
-                <span class="audio-note">♪</span>
-            </div>
-
-            <div class="audio-info" id="audio-info">
-                <div class="audio-cover">
-                    <img src="okladka.jpg" alt="Okładka">
-                </div>
-                <div class="audio-text">
-                    <span class="audio-artist">Filipek, Inee, Zegar</span>
-                    <span class="audio-title">Niebezpiecznie</span>
-                </div>
-            </div>
-
-            <div class="audio-slider-wrapper">
-                <input
-                    type="range"
-                    id="audio-volume"
-                    min="0"
-                    max="100"
-                    value="50"
-                    aria-label="Głośność muzyki"
-                >
-            </div>
-        </div>
-    </div>
-
     <main class="page">
         <section class="box profile-box" id="profile-box">
             <div class="profile">
@@ -145,64 +101,11 @@
     </footer>
 
     <script>
-        const musicStartScreen = document.getElementById("music-start-screen");
-        const musicYes = document.getElementById("music-yes");
-        const musicNo = document.getElementById("music-no");
-        const backgroundMusic = document.getElementById("background-music");
-        const audioControl = document.getElementById("audio-control");
-        const audioVolume = document.getElementById("audio-volume");
         const profileBox = document.getElementById("profile-box");
 
-        // Płynna animacja zamykania ekranu startowego
-        function closeMusicScreen() {
-            musicStartScreen.classList.add("hidden");
-            setTimeout(() => {
-                musicStartScreen.style.display = "none";
-            }, 500);
-        }
-
-        function updateVolumeState() {
-            const volume = Number(audioVolume.value);
-            backgroundMusic.volume = volume / 100;
-            audioVolume.style.setProperty("--volume", `${volume}%`);
-
-            if (volume === 0) {
-                audioControl.classList.add("muted");
-            } else {
-                audioControl.classList.remove("muted");
-            }
-        }
-
-        // --- PŁYNNY BASS SHAKE & TILT 3D LOOP ---
-        let audioCtx, analyser, dataArray, sourceNode;
-        let isAudioSetup = false;
+        // --- TILT 3D (myszka) ---
         let targetTiltX = 0, currentTiltX = 0;
         let targetTiltY = 0, currentTiltY = 0;
-
-        let targetShakeX = 0, currentShakeX = 0;
-        let targetShakeY = 0, currentShakeY = 0;
-        let targetScale = 1, currentScale = 1;
-
-        function initAudioAnalyser() {
-            if (isAudioSetup) return;
-            try {
-                const AudioContext = window.AudioContext || window.webkitAudioContext;
-                audioCtx = new AudioContext();
-                analyser = audioCtx.createAnalyser();
-                
-                analyser.fftSize = 256; 
-                analyser.smoothingTimeConstant = 0; 
-
-                sourceNode = audioCtx.createMediaElementSource(backgroundMusic);
-                sourceNode.connect(analyser);
-                analyser.connect(audioCtx.destination);
-
-                dataArray = new Uint8Array(analyser.frequencyBinCount);
-                isAudioSetup = true;
-            } catch (e) {
-                console.warn("Nie można uruchomić analizatora AudioContext:", e);
-            }
-        }
 
         function lerp(start, end, amt) {
             return (1 - amt) * start + amt * end;
@@ -211,110 +114,33 @@
         function renderLoop() {
             requestAnimationFrame(renderLoop);
 
-            // Obliczanie basu tylko gdy muzyka gra i nie jest wyciszona
-            if (!analyser || backgroundMusic.paused || backgroundMusic.volume === 0) {
-                targetShakeX = 0;
-                targetShakeY = 0;
-                targetScale = 1;
-            } else {
-                analyser.getByteFrequencyData(dataArray);
-
-                const sampleRate = audioCtx.sampleRate || 44100;
-                const nyquist = sampleRate / 2;
-                let binCount = analyser.frequencyBinCount; 
-
-                // Pasmo niskiego basu: 30Hz - 130Hz
-                let startBin = Math.floor((30 / nyquist) * binCount);
-                let endBin = Math.ceil((130 / nyquist) * binCount);
-
-                startBin = Math.max(0, startBin);
-                endBin = Math.min(binCount - 1, Math.max(startBin + 1, endBin));
-
-                let bassSum = 0;
-                for (let i = startBin; i <= endBin; i++) {
-                    bassSum += dataArray[i];
-                }
-                let count = (endBin - startBin + 1);
-                let rawBass = (bassSum / count) / 255;
-
-                const outputMultiplier = 56;
-                let bassValue = rawBass * outputMultiplier;
-
-                // Próg (8.0) - trzęsie TYLKO przy mocniejszym basie
-                const threshold = 8.0;
-
-                if (bassValue > threshold) {
-                    const intensity = Math.min((bassValue - threshold) / (outputMultiplier - threshold), 1.0);
-
-                    targetShakeX = (Math.random() - 0.5) * intensity * 22;
-                    targetShakeY = (Math.random() - 0.5) * intensity * 22;
-                    targetScale = 1 + (intensity * 0.025);
-                } else {
-                    targetShakeX = 0;
-                    targetShakeY = 0;
-                    targetScale = 1;
-                }
-            }
-
-            // Płynne przejścia (LERP) dla Tilt 3D oraz drgań basu
             currentTiltX = lerp(currentTiltX, targetTiltX, 0.12);
             currentTiltY = lerp(currentTiltY, targetTiltY, 0.12);
-            currentShakeX = lerp(currentShakeX, targetShakeX, 0.18);
-            currentShakeY = lerp(currentShakeY, targetShakeY, 0.18);
-            currentScale = lerp(currentScale, targetScale, 0.15);
 
             if (profileBox) {
-                profileBox.style.transform = `perspective(1000px) rotateX(${currentTiltX.toFixed(2)}deg) rotateY(${currentTiltY.toFixed(2)}deg) translate(${currentShakeX.toFixed(2)}px, ${currentShakeY.toFixed(2)}px) scale(${currentScale.toFixed(4)})`;
+                profileBox.style.transform = `perspective(1000px) rotateX(${currentTiltX.toFixed(2)}deg) rotateY(${currentTiltY.toFixed(2)}deg)`;
             }
         }
-
-        // Uruchomienie pętli natychmiast, aby Tilt 3D działał nawet przy wybranej opcji "Nie"
         renderLoop();
 
-        musicYes.addEventListener("click", async () => {
-            updateVolumeState();
-            try {
-                await backgroundMusic.play();
-                initAudioAnalyser();
-                if (audioCtx && audioCtx.state === "suspended") {
-                    await audioCtx.resume();
-                }
+        const desktopPointer = window.matchMedia("(hover: hover) and (pointer: fine)");
 
-                // --- Media Session API (pokazywanie utworu w systemie) ---
-                if ('mediaSession' in navigator) {
-                    navigator.mediaSession.metadata = new MediaMetadata({
-                        title: 'Niebezpiecznie',
-                        artist: 'Filipek, Inee, Zegar',
-                        album: 'Kituś 🩶',
-                        artwork: [
-                            { src: 'okladka.jpg', sizes: '512x512', type: 'image/jpeg' }
-                        ]
-                    });
-                }
-            } catch (error) {
-                console.error("Nie udało się uruchomić muzyki:", error);
-            }
-            closeMusicScreen();
-        });
+        if (profileBox && desktopPointer.matches) {
+            profileBox.addEventListener("mousemove", (event) => {
+                const rect = profileBox.getBoundingClientRect();
+                const x = event.clientX - rect.left;
+                const y = event.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                targetTiltY = ((x - centerX) / centerX) * -6;
+                targetTiltX = ((centerY - y) / centerY) * -6;
+            });
 
-        musicNo.addEventListener("click", () => {
-            backgroundMusic.pause();
-            backgroundMusic.currentTime = 0;
-            audioVolume.value = 0;
-            updateVolumeState();
-            
-            // Ukrycie odtwarzacza po kliknięciu "Nie"
-            audioControl.style.opacity = "0";
-            audioControl.style.transition = "opacity 0.4s ease";
-            setTimeout(() => {
-                audioControl.style.display = "none";
-            }, 400);
-
-            closeMusicScreen();
-        });
-
-        audioVolume.addEventListener("input", updateVolumeState);
-        updateVolumeState();
+            profileBox.addEventListener("mouseleave", () => {
+                targetTiltX = 0;
+                targetTiltY = 0;
+            });
+        }
 
         // Animacja wpisywania tekstu
         const typingText = document.getElementById("typing-text");
@@ -369,30 +195,9 @@
         }
         updateVisitorCount();
 
-        // Obsługa Tilt 3D myszką (działa ZAWSZE, niezależnie od muzyki)
-        const desktopPointer = window.matchMedia("(hover: hover) and (pointer: fine)");
-
-        if (profileBox && desktopPointer.matches) {
-            profileBox.addEventListener("mousemove", (event) => {
-                const rect = profileBox.getBoundingClientRect();
-                const x = event.clientX - rect.left;
-                const y = event.clientY - rect.top;
-                const centerX = rect.width / 2;
-                const centerY = rect.height / 2;
-                targetTiltY = ((x - centerX) / centerX) * -6;
-                targetTiltX = ((centerY - y) / centerY) * -6;
-            });
-
-            profileBox.addEventListener("mouseleave", () => {
-                targetTiltX = 0;
-                targetTiltY = 0;
-            });
-        }
-
-        // --- Automatyczne wykrywanie języka: status, kraj, ekran muzyki ---
+        // --- Automatyczne wykrywanie języka: status i kraj ---
         const relationshipText = document.getElementById("relationship-text");
         const countryText = document.getElementById("country-text");
-        const musicQuestion = document.getElementById("music-question");
 
         const relationshipLabels = {
             pl: "W związku",
@@ -438,94 +243,6 @@
             et: "Poola"
         };
 
-        const musicQuestionLabels = {
-            pl: "Czy chcesz włączyć muzykę?",
-            en: "Do you want to turn on the music?",
-            de: "Möchtest du die Musik einschalten?",
-            es: "¿Quieres activar la música?",
-            fr: "Voulez-vous activer la musique ?",
-            it: "Vuoi attivare la musica?",
-            pt: "Quer ativar a música?",
-            nl: "Wil je de muziek aanzetten?",
-            cs: "Chceš zapnout hudbu?",
-            sk: "Chceš zapnúť hudbu?",
-            uk: "Бажаєте увімкнути музику?",
-            ru: "Хотите включить музыку?",
-            sv: "Vill du sätta på musiken?",
-            no: "Vil du slå på musikken?",
-            da: "Vil du tænde for musikken?",
-            fi: "Haluatko laittaa musiikin päälle?",
-            lt: "Ar norite įjungti muziką?",
-            lv: "Vai vēlaties ieslēgt mūziku?",
-            et: "Kas soovid muusika sisse lülitada?"
-        };
-
-        const yesLabels = {
-            pl: "Tak",
-            en: "Yes",
-            de: "Ja",
-            es: "Sí",
-            fr: "Oui",
-            it: "Sì",
-            pt: "Sim",
-            nl: "Ja",
-            cs: "Ano",
-            sk: "Áno",
-            uk: "Так",
-            ru: "Да",
-            sv: "Ja",
-            no: "Ja",
-            da: "Ja",
-            fi: "Kyllä",
-            lt: "Taip",
-            lv: "Jā",
-            et: "Jah"
-        };
-
-        const noLabels = {
-            pl: "Nie",
-            en: "No",
-            de: "Nein",
-            es: "No",
-            fr: "Non",
-            it: "No",
-            pt: "Não",
-            nl: "Nee",
-            cs: "Ne",
-            sk: "Nie",
-            uk: "Ні",
-            ru: "Нет",
-            sv: "Nej",
-            no: "Nei",
-            da: "Nej",
-            fi: "Ei",
-            lt: "Ne",
-            lv: "Nē",
-            et: "Ei"
-        };
-
-        const volumeLabels = {
-            pl: "Głośność muzyki",
-            en: "Music volume",
-            de: "Musiklautstärke",
-            es: "Volumen de la música",
-            fr: "Volume de la musique",
-            it: "Volume della musica",
-            pt: "Volume da música",
-            nl: "Muziekvolume",
-            cs: "Hlasitost hudby",
-            sk: "Hlasitosť hudby",
-            uk: "Гучність музики",
-            ru: "Громкость музыки",
-            sv: "Musikvolym",
-            no: "Musikkvolum",
-            da: "Musiklydstyrke",
-            fi: "Musiikin äänenvoimakkuus",
-            lt: "Muzikos garsumas",
-            lv: "Mūzikas skaļums",
-            et: "Muusika helitugevus"
-        };
-
         function getBrowserLanguage() {
             return (navigator.language || navigator.userLanguage || "en")
                 .toLowerCase()
@@ -540,18 +257,6 @@
             }
             if (countryText) {
                 countryText.textContent = countryLabels[lang] || countryLabels.en;
-            }
-            if (musicQuestion) {
-                musicQuestion.textContent = musicQuestionLabels[lang] || musicQuestionLabels.en;
-            }
-            if (musicYes) {
-                musicYes.textContent = yesLabels[lang] || yesLabels.en;
-            }
-            if (musicNo) {
-                musicNo.textContent = noLabels[lang] || noLabels.en;
-            }
-            if (audioVolume) {
-                audioVolume.setAttribute("aria-label", volumeLabels[lang] || volumeLabels.en);
             }
         }
 
