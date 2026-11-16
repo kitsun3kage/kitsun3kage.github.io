@@ -223,6 +223,7 @@ body::after {
     color: rgba(255, 255, 255, 0.22);
 }
 
+/* STATUS / EASTER EGG: ZWIĄZEK RADZIECKI */
 .relationship-info {
     display: flex;
     align-items: center;
@@ -230,6 +231,16 @@ body::after {
     font-size: 0.95em;
     color: #ff9ecb;
     font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    cursor: help;
+    transition:
+        color 0.25s ease,
+        background 0.25s ease,
+        border-color 0.25s ease,
+        box-shadow 0.25s ease,
+        transform 0.3s ease;
 }
 
 .relationship-heart {
@@ -243,6 +254,39 @@ body::after {
 @keyframes heartPulse {
     0%, 100% { transform: scale(1); opacity: 1; }
     50% { transform: scale(1.25); opacity: 0.85; }
+}
+
+.relationship-info.soviet {
+    color: #ffd700;
+    background: linear-gradient(135deg, #c1121f, #780000);
+    border-color: #ffd700;
+    box-shadow:
+        0 0 14px rgba(255, 215, 0, 0.5),
+        inset 0 0 10px rgba(0, 0, 0, 0.35);
+    animation: sovietWave 1.4s ease-in-out infinite;
+}
+
+.relationship-info.soviet .relationship-heart {
+    font-size: 1.15em;
+    color: #ffd700;
+    text-shadow: 0 0 8px rgba(255, 215, 0, 0.85);
+    animation: sovietSwing 0.9s ease-in-out infinite;
+}
+
+.relationship-info.soviet #relationship-text {
+    color: #fff;
+    letter-spacing: 0.3px;
+    text-shadow: 0 0 6px rgba(255, 255, 255, 0.45);
+}
+
+@keyframes sovietWave {
+    0%, 100% { transform: rotate(-1.2deg) scale(1.04); }
+    50% { transform: rotate(1.2deg) scale(1.06); }
+}
+
+@keyframes sovietSwing {
+    0%, 100% { transform: rotate(-12deg); }
+    50% { transform: rotate(12deg); }
 }
 
 footer {
@@ -306,5 +350,12 @@ footer p {
     }
     .social-button img {
         transition: none;
+    }
+    .relationship-info.soviet {
+        animation: none;
+        transform: scale(1.04);
+    }
+    .relationship-info.soviet .relationship-heart {
+        animation: none;
     }
 }
