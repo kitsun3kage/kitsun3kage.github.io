@@ -18,19 +18,27 @@
 
 <body>
 
+    <video autoplay muted loop playsinline preload="metadata"
+           id="background-video" aria-hidden="true" tabindex="-1">
+        <source src="peaceful-meadow-moewalls-com.mp4" type="video/mp4">
+    </video>
+
+    <canvas id="bombardment" aria-hidden="true"></canvas>
+
     <main class="page">
         <section class="box profile-box" id="profile-box">
             <div class="profile">
-                <img src="logo.jpeg" alt="Kitsun3 Kage" class="logo">
+                <img src="logo.jpeg" alt="Kitsun3 Kage" class="logo" id="logo-img">
+                <div class="logo-stalin" id="logo-stalin" aria-hidden="true">☭</div>
                 <div class="profile-text">
                     <h1 id="typing-name" aria-label="Kituś">
                         <span id="typing-text" aria-hidden="true"></span><span class="cursor" aria-hidden="true">|</span>
                     </h1>
-                    <p>@kitsun3.kage</p>
+                    <p id="profile-handle">@kitsun3.kage</p>
                 </div>
             </div>
 
-            <div class="socials">
+            <div class="socials normal-socials" id="normal-socials">
                 <a class="social-button" href="https://www.instagram.com/kitsun3.kage"
                    target="_blank" rel="noopener noreferrer" aria-label="Instagram">
                     <img src="instagram-icon.svg" alt="">
@@ -53,7 +61,30 @@
                 </a>
             </div>
 
-            <div class="site-info">
+            <div class="socials soviet-socials" id="soviet-socials">
+                <a class="social-button" href="https://en.wikipedia.org/wiki/Joseph_Stalin"
+                   target="_blank" rel="noopener noreferrer" aria-label="Józef Stalin – Wikipedia">
+                    <img src="wikipedia-icon.svg" alt="">
+                </a>
+                <a class="social-button" href="https://en.wikipedia.org/wiki/Soviet_Union"
+                   target="_blank" rel="noopener noreferrer" aria-label="Związek Radziecki – Wikipedia">
+                    <img src="github-icon.svg" alt="">
+                </a>
+                <a class="social-button" href="https://en.wikipedia.org/wiki/Communist_Party_of_the_Soviet_Union"
+                   target="_blank" rel="noopener noreferrer" aria-label="KPZR – Wikipedia">
+                    <img src="instagram-icon.svg" alt="">
+                </a>
+                <a class="social-button" href="https://en.wikipedia.org/wiki/Red_Army"
+                   target="_blank" rel="noopener noreferrer" aria-label="Armia Czerwona – Wikipedia">
+                    <img src="youtube-icon.svg" alt="">
+                </a>
+                <a class="social-button" href="https://en.wikipedia.org/wiki/Hammer_and_sickle"
+                   target="_blank" rel="noopener noreferrer" aria-label="Sierp i młot – Wikipedia">
+                    <img src="tiktok-icon.svg" alt="">
+                </a>
+            </div>
+
+            <div class="site-info" id="site-info">
                 <div class="visitor-count" id="visitor-count-wrapper">
                     <img src="views.svg" alt="">
                     <span id="visitor-count">...</span>
@@ -64,27 +95,24 @@
                     <span id="country-text">Polska</span>
                 </div>
                 <span class="info-separator">|</span>
-                <div class="relationship-info" title="Status">
-                    <span class="relationship-heart" aria-hidden="true">💗</span>
+                <div class="relationship-info" id="relationship-info" title="Status">
+                    <span class="relationship-heart" id="relationship-heart" aria-hidden="true">💗</span>
                     <span id="relationship-text">W związku</span>
                 </div>
             </div>
         </section>
     </main>
 
-    <video autoplay muted loop playsinline preload="metadata"
-           id="background-video" aria-hidden="true" tabindex="-1">
-        <source src="peaceful-meadow-moewalls-com.mp4" type="video/mp4">
-    </video>
-
     <footer>
-        <p>&copy; 2026 Kitsun3 Kage. All rights reserved.</p>
+        <p id="footer-text">&copy; 2026 Kitsun3 Kage. All rights reserved.</p>
     </footer>
+
+    <div id="flash" aria-hidden="true"></div>
 
     <script>
         const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-        /* ---------- TILT 3D (myszka) ---------- */
+        /* ---------- TILT 3D ---------- */
         const profileBox = document.getElementById("profile-box");
         const desktopPointer = window.matchMedia("(hover: hover) and (pointer: fine)");
 
@@ -135,45 +163,59 @@
             });
         }
 
-        /* ---------- ANIMACJA WPISYWANIA ---------- */
+        /* ---------- TYPING (wielokrotnego użytku) ---------- */
         const typingText = document.getElementById("typing-text");
         const cursorEl = document.querySelector(".cursor");
-        const fullText = "Kituś 🩶";
-        const chars = Array.from(fullText);
-        let typingIndex = 0;
-        let deleting = false;
 
-        function typingAnimation() {
+        let typingToken = 0;
+        let typingTimeoutId = null;
+
+        function startTyping(text) {
+            typingToken++;
+            const myToken = typingToken;
+            if (typingTimeoutId) { clearTimeout(typingTimeoutId); typingTimeoutId = null; }
             if (!typingText) return;
 
-            if (!deleting) {
-                if (typingIndex < chars.length) {
-                    typingText.textContent = chars.slice(0, typingIndex + 1).join("");
-                    typingIndex++;
-                    setTimeout(typingAnimation, 110);
+            if (prefersReducedMotion) {
+                typingText.textContent = text;
+                return;
+            }
+
+            const chars = Array.from(text);
+            let idx = 0;
+            let deleting = false;
+            typingText.textContent = "";
+
+            function step() {
+                if (myToken !== typingToken) return;
+
+                if (!deleting) {
+                    if (idx < chars.length) {
+                        idx++;
+                        typingText.textContent = chars.slice(0, idx).join("");
+                        typingTimeoutId = setTimeout(step, 110);
+                    } else {
+                        deleting = true;
+                        typingTimeoutId = setTimeout(step, 1500);
+                    }
                 } else {
-                    deleting = true;
-                    setTimeout(typingAnimation, 1500);
-                }
-            } else {
-                if (typingIndex > 0) {
-                    typingIndex--;
-                    typingText.textContent = chars.slice(0, typingIndex).join("");
-                    setTimeout(typingAnimation, 70);
-                } else {
-                    deleting = false;
-                    setTimeout(typingAnimation, 700);
+                    if (idx > 0) {
+                        idx--;
+                        typingText.textContent = chars.slice(0, idx).join("");
+                        typingTimeoutId = setTimeout(step, 70);
+                    } else {
+                        deleting = false;
+                        typingTimeoutId = setTimeout(step, 700);
+                    }
                 }
             }
+            step();
         }
 
-        if (typingText) {
-            if (prefersReducedMotion) {
-                typingText.textContent = fullText;
-                if (cursorEl) cursorEl.style.display = "none";
-            } else {
-                typingAnimation();
-            }
+        startTyping("Kituś 🩶");
+
+        if (prefersReducedMotion && cursorEl) {
+            cursorEl.style.display = "none";
         }
 
         /* ---------- LICZNIK ODWIEDZIN ---------- */
@@ -200,8 +242,8 @@
         updateVisitorCount();
 
         /* ---------- AUTO-DETEKCJA JĘZYKA ---------- */
-        const relationshipText = document.getElementById("relationship-text");
         const countryText = document.getElementById("country-text");
+        const relationshipText = document.getElementById("relationship-text");
 
         const relationshipLabels = {
             pl: "W związku",      en: "In a relationship", de: "In einer Beziehung",
@@ -223,11 +265,13 @@
             et: "Poola"
         };
 
+        function getBrowserLanguage() {
+            return (navigator.language || "en").toLowerCase().split("-")[0];
+        }
+
         function applyLanguage() {
-            const lang = (navigator.language || "en").toLowerCase().split("-")[0];
-
+            const lang = getBrowserLanguage();
             document.documentElement.lang = lang;
-
             if (relationshipText) {
                 relationshipText.textContent = relationshipLabels[lang] || relationshipLabels.en;
             }
@@ -235,46 +279,284 @@
                 countryText.textContent = countryLabels[lang] || countryLabels.en;
             }
         }
-
         applyLanguage();
 
-        /* ---------- EASTER EGG: ZWIĄZEK RADZIECKI ---------- */
-        const relationshipInfo = document.querySelector(".relationship-info");
-        const relationshipHeart = document.querySelector(".relationship-heart");
+        /* ---------- BOMBARDOWANIE (canvas controller) ---------- */
+        const bombardment = (function () {
+            const canvas = document.getElementById("bombardment");
+            if (!canvas) return { start() {}, stop() {} };
+            const ctx = canvas.getContext("2d");
+            if (!ctx) return { start() {}, stop() {} };
+
+            let W = 0, H = 0;
+            const DPR = Math.min(window.devicePixelRatio || 1, 2);
+
+            function resize() {
+                W = window.innerWidth;
+                H = window.innerHeight;
+                canvas.width = W * DPR;
+                canvas.height = H * DPR;
+                canvas.style.width = W + "px";
+                canvas.style.height = H + "px";
+                ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+            }
+            resize();
+            window.addEventListener("resize", resize);
+
+            const bombs = [];
+            const explosions = [];
+            let running = false;
+            let loopId = null;
+
+            function spawnBomb() {
+                bombs.push({
+                    x: Math.random() * W,
+                    y: -30,
+                    vx: (Math.random() - 0.5) * 0.9,
+                    vy: 3 + Math.random() * 3,
+                    trail: []
+                });
+            }
+
+            function explode(x, y, intensity = 1) {
+                const count = Math.floor((35 + Math.random() * 35) * intensity);
+                const particles = [];
+                for (let i = 0; i < count; i++) {
+                    const angle = (Math.PI * 2 * i) / count + Math.random() * 0.35;
+                    const speed = (1 + Math.random() * 5) * intensity;
+                    particles.push({
+                        x, y,
+                        vx: Math.cos(angle) * speed,
+                        vy: Math.sin(angle) * speed,
+                        life: 1,
+                        decay: 0.012 + Math.random() * 0.02,
+                        size: 1 + Math.random() * 3 * intensity,
+                        hue: 15 + Math.random() * 35
+                    });
+                }
+                explosions.push({ x, y, radius: 0, life: 1, particles });
+            }
+
+            function update() {
+                if (Math.random() < 0.045 && bombs.length < 7) spawnBomb();
+                if (Math.random() < 0.008 && explosions.length < 6) {
+                    explode(Math.random() * W, Math.random() * H * 0.7, 0.7);
+                }
+                for (let i = bombs.length - 1; i >= 0; i--) {
+                    const b = bombs[i];
+                    b.trail.push({ x: b.x, y: b.y });
+                    if (b.trail.length > 10) b.trail.shift();
+                    b.x += b.vx;
+                    b.y += b.vy;
+                    b.vy += 0.09;
+                    if (b.y >= H - 20) {
+                        explode(b.x, H - 20, 1);
+                        bombs.splice(i, 1);
+                    }
+                }
+                for (let i = explosions.length - 1; i >= 0; i--) {
+                    const e = explosions[i];
+                    e.radius += 6;
+                    e.life -= 0.02;
+                    for (const p of e.particles) {
+                        p.x += p.vx;
+                        p.y += p.vy;
+                        p.vy += 0.09;
+                        p.vx *= 0.98;
+                        p.life -= p.decay;
+                    }
+                    if (e.life <= 0) explosions.splice(i, 1);
+                }
+            }
+
+            function draw() {
+                ctx.fillStyle = "rgba(0, 0, 0, 0.18)";
+                ctx.fillRect(0, 0, W, H);
+
+                for (const b of bombs) {
+                    for (let i = 0; i < b.trail.length; i++) {
+                        const t = b.trail[i];
+                        const a = i / b.trail.length;
+                        ctx.fillStyle = `rgba(255, ${140 + i * 8}, 60, ${a * 0.75})`;
+                        ctx.beginPath();
+                        ctx.arc(t.x, t.y, 1 + a * 2.2, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                    ctx.fillStyle = "#fff5cc";
+                    ctx.beginPath();
+                    ctx.arc(b.x, b.y, 3, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                for (const e of explosions) {
+                    ctx.strokeStyle = `rgba(255, 180, 80, ${e.life * 0.55})`;
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.arc(e.x, e.y, e.radius, 0, Math.PI * 2);
+                    ctx.stroke();
+
+                    const grad = ctx.createRadialGradient(e.x, e.y, 0, e.x, e.y, Math.max(e.radius, 1));
+                    grad.addColorStop(0, `rgba(255, 230, 120, ${e.life * 0.75})`);
+                    grad.addColorStop(0.5, `rgba(255, 90, 20, ${e.life * 0.4})`);
+                    grad.addColorStop(1, "rgba(180, 0, 0, 0)");
+                    ctx.fillStyle = grad;
+                    ctx.beginPath();
+                    ctx.arc(e.x, e.y, Math.max(e.radius, 1), 0, Math.PI * 2);
+                    ctx.fill();
+
+                    for (const p of e.particles) {
+                        if (p.life <= 0) continue;
+                        ctx.fillStyle = `hsla(${p.hue}, 100%, ${50 + p.life * 30}%, ${p.life})`;
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                }
+            }
+
+            function loop() {
+                if (!running) return;
+                update();
+                draw();
+                loopId = requestAnimationFrame(loop);
+            }
+
+            return {
+                start() {
+                    if (running) return;
+                    ctx.fillStyle = "#000";
+                    ctx.fillRect(0, 0, W, H);
+                    if (prefersReducedMotion) {
+                        const g = ctx.createLinearGradient(0, 0, 0, H);
+                        g.addColorStop(0, "#1a0000");
+                        g.addColorStop(1, "#000");
+                        ctx.fillStyle = g;
+                        ctx.fillRect(0, 0, W, H);
+                        return;
+                    }
+                    running = true;
+                    loop();
+                },
+                stop() {
+                    running = false;
+                    if (loopId) { cancelAnimationFrame(loopId); loopId = null; }
+                    ctx.clearRect(0, 0, W, H);
+                    bombs.length = 0;
+                    explosions.length = 0;
+                }
+            };
+        })();
+
+        /* ---------- TRYB SOWIECKI ---------- */
+        const bgVideo = document.getElementById("background-video");
+        const relationshipInfo = document.getElementById("relationship-info");
+        const relationshipHeart = document.getElementById("relationship-heart");
+        const siteInfo = document.getElementById("site-info");
+        const logoImg = document.getElementById("logo-img");
+        const logoStalin = document.getElementById("logo-stalin");
+        const profileHandle = document.getElementById("profile-handle");
+        const normalSocials = document.getElementById("normal-socials");
+        const sovietSocials = document.getElementById("soviet-socials");
+        const footerText = document.getElementById("footer-text");
 
         const SOVIET_TEXT = "W Związku Radzieckim";
         const SOVIET_ICON = "☭";
         const HEART_ICON = "💗";
+        const DEFAULT_TITLE = "Kituś 🩶";
+        const DEFAULT_FOOTER = "© 2026 Kitsun3 Kage. All rights reserved.";
+        const SOVIET_FOOTER = "© 1922–1953 ZSRR. Wszelkie prawa zastrzeżone.";
 
+        let sovietActive = false;
         let savedRelationshipText = null;
+        let savedCountryText = null;
+        let exitDebounceId = null;
 
         function enterSovietMode() {
-            if (!relationshipInfo || !relationshipText || !relationshipHeart) return;
-            if (savedRelationshipText !== null) return;
+            if (exitDebounceId) { clearTimeout(exitDebounceId); exitDebounceId = null; }
+            if (sovietActive) return;
+            sovietActive = true;
+
             savedRelationshipText = relationshipText.textContent;
-            relationshipHeart.textContent = SOVIET_ICON;
-            relationshipText.textContent = SOVIET_TEXT;
-            relationshipInfo.classList.add("soviet");
+            savedCountryText = countryText.textContent;
+
+            document.body.classList.add("soviet-mode");
+            if (bgVideo) bgVideo.pause();
+            bombardment.start();
+
+            if (logoImg) logoImg.style.display = "none";
+            if (logoStalin) logoStalin.style.display = "flex";
+            if (profileHandle) profileHandle.textContent = "@stalin";
+            document.title = "Stalin ☭";
+            startTyping("Stalin ☭");
+
+            if (countryText) countryText.textContent = "Moskwa, ZSRR";
+
+            if (normalSocials) normalSocials.style.display = "none";
+            if (sovietSocials) sovietSocials.style.display = "flex";
+
+            if (footerText) footerText.textContent = SOVIET_FOOTER;
+
+            if (relationshipHeart) relationshipHeart.textContent = SOVIET_ICON;
+            if (relationshipText) relationshipText.textContent = SOVIET_TEXT;
+            if (relationshipInfo) relationshipInfo.classList.add("soviet");
         }
 
         function exitSovietMode() {
-            if (!relationshipInfo || !relationshipText || !relationshipHeart) return;
-            if (savedRelationshipText === null) return;
-            relationshipInfo.classList.remove("soviet");
-            relationshipHeart.textContent = HEART_ICON;
-            relationshipText.textContent = savedRelationshipText;
+            if (!sovietActive) return;
+            sovietActive = false;
+
+            document.body.classList.remove("soviet-mode");
+            bombardment.stop();
+            if (bgVideo) bgVideo.play().catch(() => {});
+
+            if (logoImg) logoImg.style.display = "";
+            if (logoStalin) logoStalin.style.display = "none";
+            if (profileHandle) profileHandle.textContent = "@kitsun3.kage";
+            document.title = DEFAULT_TITLE;
+            startTyping("Kituś 🩶");
+
+            if (countryText && savedCountryText !== null) {
+                countryText.textContent = savedCountryText;
+            }
+
+            if (normalSocials) normalSocials.style.display = "flex";
+            if (sovietSocials) sovietSocials.style.display = "none";
+
+            if (footerText) footerText.textContent = DEFAULT_FOOTER;
+
+            if (relationshipHeart) relationshipHeart.textContent = HEART_ICON;
+            if (relationshipText) {
+                relationshipText.textContent = savedRelationshipText !== null
+                    ? savedRelationshipText
+                    : (relationshipLabels[getBrowserLanguage()] || relationshipLabels.en);
+            }
+            if (relationshipInfo) relationshipInfo.classList.remove("soviet");
+
             savedRelationshipText = null;
+            savedCountryText = null;
         }
 
         if (relationshipInfo) {
             relationshipInfo.addEventListener("mouseenter", enterSovietMode);
-            relationshipInfo.addEventListener("mouseleave", exitSovietMode);
         }
 
-        /* ---------- PAUZA WIDEO W TLE ---------- */
-        const bgVideo = document.getElementById("background-video");
+        /* Wyjście dopiero po opuszczeniu całego paska info —
+           dzięki temu zmiana szerokości statusu nie powoduje migotania */
+        if (siteInfo) {
+            siteInfo.addEventListener("mouseleave", () => {
+                if (!sovietActive) return;
+                if (exitDebounceId) clearTimeout(exitDebounceId);
+                exitDebounceId = setTimeout(() => {
+                    exitSovietMode();
+                    exitDebounceId = null;
+                }, 220);
+            });
+        }
+
+        /* ---------- PAUZA WIDEO PRZY UKRYTEJ KARCIE ---------- */
         if (bgVideo) {
             document.addEventListener("visibilitychange", () => {
+                if (sovietActive) return;
                 if (document.hidden) {
                     bgVideo.pause();
                 } else {
