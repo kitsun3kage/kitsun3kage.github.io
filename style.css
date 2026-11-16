@@ -31,7 +31,20 @@ body {
     justify-content: center;
 }
 
-/* CANVAS Z BOMBARDOWANIEM */
+/* WIDEO W TLE — widoczne domyślnie */
+#background-video {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -10;
+    pointer-events: none;
+    opacity: 1;
+    transition: opacity 0.6s ease;
+}
+
+/* CANVAS Z BOMBARDOWANIEM — ukryty domyślnie */
 #bombardment {
     position: fixed;
     inset: 0;
@@ -39,16 +52,31 @@ body {
     height: 100%;
     z-index: -10;
     pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.6s ease;
     display: block;
+}
+
+body.soviet-mode #background-video {
+    opacity: 0;
+}
+
+body.soviet-mode #bombardment {
+    opacity: 1;
 }
 
 body::before {
     content: "";
     position: fixed;
     inset: 0;
-    background: linear-gradient(180deg, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.55));
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.22), rgba(0, 0, 0, 0.42));
     z-index: -9;
     pointer-events: none;
+    transition: background 0.6s ease;
+}
+
+body.soviet-mode::before {
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.55));
 }
 
 body::after {
@@ -57,11 +85,40 @@ body::after {
     inset: 0;
     background: radial-gradient(
         circle at 50% 40%,
-        rgba(200, 30, 30, 0.10),
-        transparent 55%
+        rgba(120, 100, 255, 0.08),
+        transparent 45%
     );
     z-index: -8;
     pointer-events: none;
+    transition: background 0.6s ease;
+}
+
+body.soviet-mode::after {
+    background: radial-gradient(
+        circle at 50% 40%,
+        rgba(200, 30, 30, 0.16),
+        transparent 55%
+    );
+}
+
+/* BŁYSK PRZY WCHODZENIU W TRYB SOWIECKI */
+#flash {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(255, 80, 0, 0.6), rgba(140, 0, 0, 0.85));
+    opacity: 0;
+    pointer-events: none;
+    z-index: 99998;
+}
+
+body.soviet-mode #flash {
+    animation: sovietFlash 0.7s ease-out;
+}
+
+@keyframes sovietFlash {
+    0%   { opacity: 0; }
+    15%  { opacity: 1; }
+    100% { opacity: 0; }
 }
 
 .page {
@@ -79,16 +136,28 @@ body::after {
 .box {
     width: min(500px, 100%);
     position: relative;
-    border: 1px solid rgba(255, 60, 60, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.18);
     border-radius: 30px;
-    background: rgba(0, 0, 0, 0.28);
+    background: rgba(0, 0, 0, 0.08);
     backdrop-filter: blur(18px);
     -webkit-backdrop-filter: blur(18px);
     box-shadow:
-        0 20px 60px rgba(0, 0, 0, 0.55),
-        0 0 40px rgba(180, 0, 0, 0.15),
+        0 20px 60px rgba(0, 0, 0, 0.38),
         inset 0 1px 0 rgba(255, 255, 255, 0.06);
     overflow: hidden;
+    transition:
+        border-color 0.4s ease,
+        background 0.4s ease,
+        box-shadow 0.4s ease;
+}
+
+body.soviet-mode .box {
+    border-color: rgba(255, 60, 60, 0.5);
+    background: rgba(0, 0, 0, 0.32);
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.55),
+        0 0 40px rgba(180, 0, 0, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
 .profile-box {
@@ -106,12 +175,24 @@ body::after {
     gap: 18px;
 }
 
-/* LOGO STALINA */
+/* LOGO — zwykły obrazek domyślnie */
+.logo {
+    width: 76px;
+    height: 76px;
+    flex: 0 0 76px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+    display: block;
+}
+
+/* LOGO STALINA — ukryty domyślnie */
 .logo-stalin {
     width: 76px;
     height: 76px;
     flex: 0 0 76px;
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
@@ -130,6 +211,9 @@ body::after {
     user-select: none;
 }
 
+body.soviet-mode .logo { display: none; }
+body.soviet-mode .logo-stalin { display: flex; }
+
 .profile-text {
     min-width: 0;
 }
@@ -146,15 +230,25 @@ body::after {
     margin-top: 7px;
     font-size: 15px;
     line-height: 1.2;
-    color: rgba(255, 200, 200, 0.6);
+    color: rgba(255, 255, 255, 0.58);
     letter-spacing: 0.1px;
+    transition: color 0.4s ease;
+}
+
+body.soviet-mode .profile-text p {
+    color: rgba(255, 200, 200, 0.65);
 }
 
 .cursor {
     display: inline-block;
     margin-left: 2px;
-    color: rgba(255, 100, 100, 0.9);
+    color: rgba(255, 255, 255, 0.8);
     animation: cursorBlink 0.9s infinite;
+    transition: color 0.4s ease;
+}
+
+body.soviet-mode .cursor {
+    color: rgba(255, 100, 100, 0.95);
 }
 
 @keyframes cursorBlink {
@@ -170,6 +264,11 @@ body::after {
     gap: 14px;
     margin-top: 28px;
 }
+
+/* Grupy social — tylko jedna widoczna w danym momencie */
+.soviet-socials { display: none; }
+body.soviet-mode .normal-socials { display: none; }
+body.soviet-mode .soviet-socials { display: flex; }
 
 .social-button {
     width: 45px;
@@ -188,19 +287,32 @@ body::after {
     width: 45px;
     height: 45px;
     object-fit: contain;
-    filter: drop-shadow(0 0 5px rgba(255, 210, 100, 0.75));
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.65));
     transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+body.soviet-mode .social-button img {
+    filter: drop-shadow(0 0 5px rgba(255, 210, 100, 0.8));
 }
 
 .social-button:hover img,
 .social-button:focus-visible img {
-    transform: scale(1.12);
+    transform: scale(1.1);
+    filter: drop-shadow(0 0 9px rgba(255, 255, 255, 0.85));
+}
+
+body.soviet-mode .social-button:hover img,
+body.soviet-mode .social-button:focus-visible img {
     filter: drop-shadow(0 0 10px rgba(255, 60, 60, 0.95));
 }
 
 .social-button:focus-visible {
-    outline: 2px solid #ffd700;
+    outline: 2px solid #fff;
     outline-offset: 3px;
+}
+
+body.soviet-mode .social-button:focus-visible {
+    outline-color: #ffd700;
 }
 
 .site-info {
@@ -211,8 +323,13 @@ body::after {
     flex-wrap: wrap;
     gap: 12px;
     margin-top: 28px;
-    color: rgba(255, 210, 210, 0.6);
+    color: rgba(255, 255, 255, 0.55);
     font-size: 13px;
+    transition: color 0.4s ease;
+}
+
+body.soviet-mode .site-info {
+    color: rgba(255, 210, 210, 0.65);
 }
 
 .visitor-count,
@@ -232,14 +349,19 @@ body::after {
     width: 15px;
     height: 15px;
     object-fit: contain;
-    opacity: 0.7;
+    opacity: 0.65;
 }
 
 .info-separator {
-    color: rgba(255, 80, 80, 0.35);
+    color: rgba(255, 255, 255, 0.22);
+    transition: color 0.4s ease;
 }
 
-/* STATUS / EASTER EGG: ZWIĄZEK RADZIECKI */
+body.soviet-mode .info-separator {
+    color: rgba(255, 80, 80, 0.4);
+}
+
+/* STATUS / EASTER EGG */
 .relationship-info {
     display: flex;
     align-items: center;
@@ -318,11 +440,16 @@ footer {
 
 footer p {
     font-size: 11px;
-    color: rgba(255, 200, 200, 0.35);
+    color: rgba(255, 255, 255, 0.35);
     letter-spacing: 0.1px;
     text-align: center;
     pointer-events: auto;
     user-select: text;
+    transition: color 0.4s ease;
+}
+
+body.soviet-mode footer p {
+    color: rgba(255, 200, 200, 0.4);
 }
 
 /* RESPONSYWNOŚĆ */
@@ -331,7 +458,9 @@ footer p {
     .box { backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
     .profile-box { padding: 24px; border-radius: 26px; min-height: 0; }
     .profile { gap: 14px; }
-    .logo-stalin { width: 62px; height: 62px; flex-basis: 62px; font-size: 38px; }
+    .logo,
+    .logo-stalin { width: 62px; height: 62px; flex-basis: 62px; }
+    .logo-stalin { font-size: 38px; }
     .profile-text h1 { font-size: 25px; letter-spacing: -0.5px; }
     .profile-text p { font-size: 14px; margin-top: 6px; }
     .socials { margin-top: 24px; gap: 22px; }
@@ -344,7 +473,9 @@ footer p {
 
 @media (max-width: 380px) {
     .profile-box { padding: 20px; border-radius: 23px; }
-    .logo-stalin { width: 56px; height: 56px; flex-basis: 56px; font-size: 34px; }
+    .logo,
+    .logo-stalin { width: 56px; height: 56px; flex-basis: 56px; }
+    .logo-stalin { font-size: 34px; }
     .profile-text h1 { font-size: 22px; }
     .profile-text p { font-size: 13px; }
     .socials { gap: 20px; }
@@ -364,14 +495,10 @@ footer p {
         transform: none !important;
         will-change: auto;
     }
-    .social-button img {
-        transition: none;
-    }
-    .relationship-info.soviet {
-        animation: none;
-        transform: scale(1.04);
-    }
-    .relationship-info.soviet .relationship-heart {
-        animation: none;
-    }
+    .social-button img { transition: none; }
+    .relationship-info.soviet { animation: none; transform: scale(1.04); }
+    .relationship-info.soviet .relationship-heart { animation: none; }
+    body.soviet-mode #flash { animation: none; }
+    #bombardment,
+    #background-video { transition: none; }
 }
