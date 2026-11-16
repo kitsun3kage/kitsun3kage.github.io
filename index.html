@@ -64,7 +64,7 @@
                     <span id="country-text">Polska</span>
                 </div>
                 <span class="info-separator">|</span>
-                <div class="relationship-info" title="Status / Relationship status">
+                <div class="relationship-info" title="Status">
                     <span class="relationship-heart" aria-hidden="true">💗</span>
                     <span id="relationship-text">W związku</span>
                 </div>
@@ -237,6 +237,39 @@
         }
 
         applyLanguage();
+
+        /* ---------- EASTER EGG: ZWIĄZEK RADZIECKI ---------- */
+        const relationshipInfo = document.querySelector(".relationship-info");
+        const relationshipHeart = document.querySelector(".relationship-heart");
+
+        const SOVIET_TEXT = "W Związku Radzieckim";
+        const SOVIET_ICON = "☭";
+        const HEART_ICON = "💗";
+
+        let savedRelationshipText = null;
+
+        function enterSovietMode() {
+            if (!relationshipInfo || !relationshipText || !relationshipHeart) return;
+            if (savedRelationshipText !== null) return;
+            savedRelationshipText = relationshipText.textContent;
+            relationshipHeart.textContent = SOVIET_ICON;
+            relationshipText.textContent = SOVIET_TEXT;
+            relationshipInfo.classList.add("soviet");
+        }
+
+        function exitSovietMode() {
+            if (!relationshipInfo || !relationshipText || !relationshipHeart) return;
+            if (savedRelationshipText === null) return;
+            relationshipInfo.classList.remove("soviet");
+            relationshipHeart.textContent = HEART_ICON;
+            relationshipText.textContent = savedRelationshipText;
+            savedRelationshipText = null;
+        }
+
+        if (relationshipInfo) {
+            relationshipInfo.addEventListener("mouseenter", enterSovietMode);
+            relationshipInfo.addEventListener("mouseleave", exitSovietMode);
+        }
 
         /* ---------- PAUZA WIDEO W TLE ---------- */
         const bgVideo = document.getElementById("background-video");
