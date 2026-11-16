@@ -4,40 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <meta name="description" content="Kituś — osobista strona Kitsun3 Kage.">
+    <meta name="theme-color" content="#000000">
+    <meta property="og:title" content="Kituś 🩶">
+    <meta property="og:description" content="Kitsun3 Kage — portfolio i linki.">
+    <meta property="og:image" content="logo.jpeg">
+
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="stylesheet" href="style.css">
 
     <title>Kituś 🩶</title>
-
-    <style>
-        .relationship-info {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.9em;
-            color: #ff9ecb;
-            font-weight: 600;
-        }
-
-        .relationship-heart {
-            font-size: 1em;
-            line-height: 1;
-            animation: heartPulse 1.6s infinite;
-            transform-origin: center;
-            display: inline-block;
-        }
-
-        @keyframes heartPulse {
-            0%, 100% {
-                transform: scale(1);
-                opacity: 1;
-            }
-            50% {
-                transform: scale(1.25);
-                opacity: 0.85;
-            }
-        }
-    </style>
 </head>
 
 <body>
@@ -47,33 +23,38 @@
             <div class="profile">
                 <img src="logo.jpeg" alt="Kitsun3 Kage" class="logo">
                 <div class="profile-text">
-                    <h1 id="typing-name" style="font-weight: 700;">
-                        <span id="typing-text"></span><span class="cursor">|</span>
+                    <h1 id="typing-name" aria-label="Kituś">
+                        <span id="typing-text" aria-hidden="true"></span><span class="cursor" aria-hidden="true">|</span>
                     </h1>
                     <p>@kitsun3.kage</p>
                 </div>
             </div>
 
             <div class="socials">
-                <button class="social-button" type="button" onclick="window.open('https://www.instagram.com/kitsun3.kage', '_blank')" aria-label="Instagram">
-                    <img src="instagram-icon.svg" alt="Instagram">
-                </button>
-                <button class="social-button" type="button" onclick="window.open('https://github.com/kitsun3kage', '_blank')" aria-label="GitHub">
-                    <img src="github-icon.svg" alt="GitHub">
-                </button>
-                <button class="social-button" type="button" onclick="window.open('https://www.tiktok.com/@kitsun3.kage', '_blank')" aria-label="TikTok">
-                    <img src="tiktok-icon.svg" alt="TikTok">
-                </button>
-                <button class="social-button" type="button" onclick="window.open('https://www.youtube.com/@kitsun3kage', '_blank')" aria-label="YouTube">
-                    <img src="youtube-icon.svg" alt="YouTube">
-                </button>
-                <button class="social-button" type="button" onclick="window.open('https://pl.wikipedia.org/wiki/Wikipedysta:Kitsun3_Kage', '_blank')" aria-label="Wikipedia">
-                    <img src="wikipedia-icon.svg" alt="Wikipedia">
-                </button>
+                <a class="social-button" href="https://www.instagram.com/kitsun3.kage"
+                   target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                    <img src="instagram-icon.svg" alt="">
+                </a>
+                <a class="social-button" href="https://github.com/kitsun3kage"
+                   target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                    <img src="github-icon.svg" alt="">
+                </a>
+                <a class="social-button" href="https://www.tiktok.com/@kitsun3.kage"
+                   target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+                    <img src="tiktok-icon.svg" alt="">
+                </a>
+                <a class="social-button" href="https://www.youtube.com/@kitsun3kage"
+                   target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+                    <img src="youtube-icon.svg" alt="">
+                </a>
+                <a class="social-button" href="https://pl.wikipedia.org/wiki/Wikipedysta:Kitsun3_Kage"
+                   target="_blank" rel="noopener noreferrer" aria-label="Wikipedia">
+                    <img src="wikipedia-icon.svg" alt="">
+                </a>
             </div>
 
             <div class="site-info">
-                <div class="visitor-count">
+                <div class="visitor-count" id="visitor-count-wrapper">
                     <img src="views.svg" alt="">
                     <span id="visitor-count">...</span>
                 </div>
@@ -84,16 +65,16 @@
                 </div>
                 <span class="info-separator">|</span>
                 <div class="relationship-info" title="Status / Relationship status">
-                    <span class="relationship-heart">💗</span>
+                    <span class="relationship-heart" aria-hidden="true">💗</span>
                     <span id="relationship-text">W związku</span>
                 </div>
             </div>
         </section>
     </main>
 
-    <video autoplay muted loop playsinline id="background-video">
+    <video autoplay muted loop playsinline preload="metadata"
+           id="background-video" aria-hidden="true" tabindex="-1">
         <source src="peaceful-meadow-moewalls-com.mp4" type="video/mp4">
-        Twoja przeglądarka nie obsługuje odtwarzania wideo.
     </video>
 
     <footer>
@@ -101,31 +82,41 @@
     </footer>
 
     <script>
-        const profileBox = document.getElementById("profile-box");
+        const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-        // --- TILT 3D (myszka) ---
+        /* ---------- TILT 3D (myszka) ---------- */
+        const profileBox = document.getElementById("profile-box");
+        const desktopPointer = window.matchMedia("(hover: hover) and (pointer: fine)");
+
         let targetTiltX = 0, currentTiltX = 0;
         let targetTiltY = 0, currentTiltY = 0;
+        let rafId = null;
 
-        function lerp(start, end, amt) {
-            return (1 - amt) * start + amt * end;
-        }
+        const lerp = (start, end, amt) => (1 - amt) * start + amt * end;
 
         function renderLoop() {
-            requestAnimationFrame(renderLoop);
-
             currentTiltX = lerp(currentTiltX, targetTiltX, 0.12);
             currentTiltY = lerp(currentTiltY, targetTiltY, 0.12);
 
             if (profileBox) {
-                profileBox.style.transform = `perspective(1000px) rotateX(${currentTiltX.toFixed(2)}deg) rotateY(${currentTiltY.toFixed(2)}deg)`;
+                profileBox.style.transform =
+                    `perspective(1000px) rotateX(${currentTiltX.toFixed(2)}deg) rotateY(${currentTiltY.toFixed(2)}deg)`;
+            }
+
+            const stillMoving =
+                Math.abs(currentTiltX - targetTiltX) > 0.01 ||
+                Math.abs(currentTiltY - targetTiltY) > 0.01;
+
+            rafId = stillMoving ? requestAnimationFrame(renderLoop) : null;
+        }
+
+        function scheduleRender() {
+            if (rafId === null) {
+                rafId = requestAnimationFrame(renderLoop);
             }
         }
-        renderLoop();
 
-        const desktopPointer = window.matchMedia("(hover: hover) and (pointer: fine)");
-
-        if (profileBox && desktopPointer.matches) {
+        if (profileBox && desktopPointer.matches && !prefersReducedMotion) {
             profileBox.addEventListener("mousemove", (event) => {
                 const rect = profileBox.getBoundingClientRect();
                 const x = event.clientX - rect.left;
@@ -134,17 +125,21 @@
                 const centerY = rect.height / 2;
                 targetTiltY = ((x - centerX) / centerX) * -6;
                 targetTiltX = ((centerY - y) / centerY) * -6;
+                scheduleRender();
             });
 
             profileBox.addEventListener("mouseleave", () => {
                 targetTiltX = 0;
                 targetTiltY = 0;
+                scheduleRender();
             });
         }
 
-        // Animacja wpisywania tekstu
+        /* ---------- ANIMACJA WPISYWANIA ---------- */
         const typingText = document.getElementById("typing-text");
-        const text = "Kituś 🩶";
+        const cursorEl = document.querySelector(".cursor");
+        const fullText = "Kituś 🩶";
+        const chars = Array.from(fullText);
         let typingIndex = 0;
         let deleting = false;
 
@@ -152,8 +147,8 @@
             if (!typingText) return;
 
             if (!deleting) {
-                if (typingIndex < text.length) {
-                    typingText.textContent = text.substring(0, typingIndex + 1);
+                if (typingIndex < chars.length) {
+                    typingText.textContent = chars.slice(0, typingIndex + 1).join("");
                     typingIndex++;
                     setTimeout(typingAnimation, 110);
                 } else {
@@ -163,7 +158,7 @@
             } else {
                 if (typingIndex > 0) {
                     typingIndex--;
-                    typingText.textContent = text.substring(0, typingIndex);
+                    typingText.textContent = chars.slice(0, typingIndex).join("");
                     setTimeout(typingAnimation, 70);
                 } else {
                     deleting = false;
@@ -171,86 +166,67 @@
                 }
             }
         }
-        typingAnimation();
 
-        // Licznik odwiedzin
+        if (typingText) {
+            if (prefersReducedMotion) {
+                typingText.textContent = fullText;
+                if (cursorEl) cursorEl.style.display = "none";
+            } else {
+                typingAnimation();
+            }
+        }
+
+        /* ---------- LICZNIK ODWIEDZIN ---------- */
+        const visitorCountWrapper = document.getElementById("visitor-count-wrapper");
         const visitorCount = document.getElementById("visitor-count");
         const counterUrl = "https://api.counterapi.dev/v2/kitsun3kage-portfolio/kitu-portfolio-2026/up";
 
         async function updateVisitorCount() {
-            if (!visitorCount) return;
+            if (!visitorCount || !visitorCountWrapper) return;
             try {
                 const response = await fetch(counterUrl);
                 if (!response.ok) throw new Error("Counter request failed");
                 const data = await response.json();
-                if (data && data.data && data.data.up_count !== undefined) {
-                    visitorCount.textContent = data.data.up_count.toLocaleString("pl-PL");
+                const count = data?.data?.up_count;
+                if (typeof count === "number") {
+                    visitorCount.textContent = count.toLocaleString("pl-PL");
                 } else {
-                    visitorCount.textContent = "0";
+                    visitorCountWrapper.classList.add("hidden");
                 }
-            } catch (error) {
-                console.error("Nie udało się pobrać licznika odwiedzin:", error);
-                visitorCount.textContent = "0";
+            } catch {
+                visitorCountWrapper.classList.add("hidden");
             }
         }
         updateVisitorCount();
 
-        // --- Automatyczne wykrywanie języka: status i kraj ---
+        /* ---------- AUTO-DETEKCJA JĘZYKA ---------- */
         const relationshipText = document.getElementById("relationship-text");
         const countryText = document.getElementById("country-text");
 
         const relationshipLabels = {
-            pl: "W związku",
-            en: "In a relationship",
-            de: "In einer Beziehung",
-            es: "En una relación",
-            fr: "En couple",
-            it: "Impegnato/a",
-            pt: "Em um relacionamento",
-            nl: "In een relatie",
-            cs: "Ve vztahu",
-            sk: "Vo vzťahu",
-            uk: "У стосунках",
-            ru: "В отношениях",
-            sv: "I ett förhållande",
-            no: "I et forhold",
-            da: "I et forhold",
-            fi: "Parisuhteessa",
-            lt: "Santykiai",
-            lv: "Attiecībās",
+            pl: "W związku",      en: "In a relationship", de: "In einer Beziehung",
+            es: "En una relación", fr: "En couple",         it: "Impegnato/a",
+            pt: "Em um relacionamento", nl: "In een relatie", cs: "Ve vztahu",
+            sk: "Vo vzťahu",      uk: "У стосунках",        ru: "В отношениях",
+            sv: "I ett förhållande", no: "I et forhold",    da: "I et forhold",
+            fi: "Parisuhteessa",  lt: "Santykiai",          lv: "Attiecībās",
             et: "Suhtes"
         };
 
         const countryLabels = {
-            pl: "Polska",
-            en: "Poland",
-            de: "Polen",
-            es: "Polonia",
-            fr: "Pologne",
-            it: "Polonia",
-            pt: "Polónia",
-            nl: "Polen",
-            cs: "Polsko",
-            sk: "Poľsko",
-            uk: "Польща",
-            ru: "Польша",
-            sv: "Polen",
-            no: "Polen",
-            da: "Polen",
-            fi: "Puola",
-            lt: "Lenkija",
-            lv: "Polija",
+            pl: "Polska",         en: "Poland",             de: "Polen",
+            es: "Polonia",        fr: "Pologne",            it: "Polonia",
+            pt: "Polónia",        nl: "Polen",              cs: "Polsko",
+            sk: "Poľsko",         uk: "Польща",             ru: "Польша",
+            sv: "Polen",          no: "Polen",              da: "Polen",
+            fi: "Puola",          lt: "Lenkija",            lv: "Polija",
             et: "Poola"
         };
 
-        function getBrowserLanguage() {
-            return (navigator.language || navigator.userLanguage || "en")
-                .toLowerCase()
-                .split("-")[0];
-        }
-
         function applyLanguage() {
-            const lang = getBrowserLanguage();
+            const lang = (navigator.language || "en").toLowerCase().split("-")[0];
+
+            document.documentElement.lang = lang;
 
             if (relationshipText) {
                 relationshipText.textContent = relationshipLabels[lang] || relationshipLabels.en;
@@ -261,6 +237,18 @@
         }
 
         applyLanguage();
+
+        /* ---------- PAUZA WIDEO W TLE ---------- */
+        const bgVideo = document.getElementById("background-video");
+        if (bgVideo) {
+            document.addEventListener("visibilitychange", () => {
+                if (document.hidden) {
+                    bgVideo.pause();
+                } else {
+                    bgVideo.play().catch(() => {});
+                }
+            });
+        }
     </script>
 </body>
 </html>
